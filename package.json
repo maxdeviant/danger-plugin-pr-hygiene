@@ -1,15 +1,27 @@
 {
   "name": "danger-plugin-pr-hygiene",
   "version": "0.0.1",
-  "main": "index.js",
   "repository": "git@github.com:maxdeviant/danger-plugin-pr-hygiene.git",
   "author": "Marshall Bowers <elliott.codes@gmail.com>",
   "license": "MIT",
+  "description": "A Danger plugin for enforcing good PR hygiene.",
+  "keywords": [
+    "danger",
+    "danger-plugin",
+    "hygiene"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "format": "prettier --ignore-path .gitignore --write '**/*.+(js|json|md|ts|tsx)'",
     "build": "tsc -p .",
     "test": "jest"
   },
+  "files": [
+    "lib/",
+    "!lib/**/__tests__/",
+    "!lib/**/*.test.{js,d.ts}"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "28.1.7",
