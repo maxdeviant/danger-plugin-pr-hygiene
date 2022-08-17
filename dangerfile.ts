@@ -1,0 +1,3 @@
+import { prHygiene } from './';
+
+prHygiene();
