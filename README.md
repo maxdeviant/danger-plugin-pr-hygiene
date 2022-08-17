@@ -25,3 +25,5 @@ import { prHygiene } from 'danger-plugin-pr-hygiene';
 
 prHygiene();
 ```
+
+This is a test.
