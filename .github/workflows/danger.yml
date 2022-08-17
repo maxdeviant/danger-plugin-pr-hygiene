@@ -22,7 +22,6 @@ jobs:
           node-version: '16'
 
       - run: yarn
-
       - run: yarn build
 
       - name: Run Danger
