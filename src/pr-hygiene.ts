@@ -31,7 +31,7 @@ export const prHygiene = ({
   imperativeMood = defaultUseImperativeMoodConfig,
   noTrailingPunctuation:
     noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
-}: PrHygieneOptions) => {
+}: PrHygieneOptions = {}) => {
   if (imperativeMood !== 'off') {
     useImperativeMood({
       emit: emitLevelToHandler[imperativeMood.level],
