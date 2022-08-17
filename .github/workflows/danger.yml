@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: '16'
 
+      - run: yarn
+
+      - run: yarn build
+
       - name: Run Danger
         run: yarn danger ci
         env:
