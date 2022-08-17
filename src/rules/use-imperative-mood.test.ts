@@ -1,43 +1,45 @@
 import { useImperativeMood } from './use-imperative-mood';
 
 describe('useImperativeMood', () => {
+  const message = 'Violation';
+
   describe('when the PR title is written in the imperative mood', () => {
-    it('does not emit a warning', () => {
-      const warn = jest.fn();
+    it('does not emit a message', () => {
+      const emit = jest.fn();
 
-      useImperativeMood({ warn })('Add brand new feature');
+      useImperativeMood({ emit, message })('Add brand new feature');
 
-      expect(warn).not.toHaveBeenCalled();
+      expect(emit).not.toHaveBeenCalled();
     });
   });
 
   describe('when the PR title contains a third-person singular verb', () => {
-    it('emits a warning', () => {
-      const warn = jest.fn();
+    it('emits a message', () => {
+      const emit = jest.fn();
 
-      useImperativeMood({ warn })('Adds a brand new feature');
+      useImperativeMood({ emit, message })('Adds a brand new feature');
 
-      expect(warn).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when the PR title contains a past-tense verb', () => {
-    it('emits a warning', () => {
-      const warn = jest.fn();
+    it('emits a message', () => {
+      const emit = jest.fn();
 
-      useImperativeMood({ warn })('Added a brand new feature');
+      useImperativeMood({ emit, message })('Added a brand new feature');
 
-      expect(warn).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when the PR title contains a present participle verb', () => {
-    it('emits a warning', () => {
-      const warn = jest.fn();
+    it('emits a message', () => {
+      const emit = jest.fn();
 
-      useImperativeMood({ warn })('Adding a brand new feature');
+      useImperativeMood({ emit, message })('Adding a brand new feature');
 
-      expect(warn).toHaveBeenCalledTimes(1);
+      expect(emit).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -5,7 +5,7 @@ import {
 } from '../grammar';
 
 export const useImperativeMood =
-  ({ warn }: { warn: (message: string) => void }) =>
+  ({ emit, message }: { emit: (message: string) => void; message: string }) =>
   (prTitle: string) => {
     const words = prTitle.split(' ');
 
@@ -18,6 +18,6 @@ export const useImperativeMood =
       pastTenseWords.length ||
       presentParticipleWords.length
     ) {
-      warn('Write PR titles using the imperative mood.');
+      emit(message);
     }
   };
