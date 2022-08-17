@@ -35,23 +35,67 @@ describe('prHygiene: Imperative Mood', () => {
     });
 
     describe.each(FAILING_PR_TITLES)('given "%s"', prTitle => {
-      it('emits a message', () => {
-        const message = jest.fn();
-        const warn = jest.fn();
-        const fail = jest.fn();
+      describe('with the `level` set to `message`', () => {
+        it('emits a message', () => {
+          const message = jest.fn();
+          const warn = jest.fn();
+          const fail = jest.fn();
 
-        const prHygiene = makePrHygiene({
-          message,
-          warn,
-          fail,
-          prTitle,
+          const prHygiene = makePrHygiene({
+            message,
+            warn,
+            fail,
+            prTitle,
+          });
+
+          prHygiene({ imperativeMood: { level: 'message' } });
+
+          expect(message).toHaveBeenCalledTimes(1);
+          expect(warn).not.toHaveBeenCalled();
+          expect(fail).not.toHaveBeenCalled();
         });
+      });
 
-        prHygiene();
+      describe('with the `level` set to `warn`', () => {
+        it('emits a warning', () => {
+          const message = jest.fn();
+          const warn = jest.fn();
+          const fail = jest.fn();
 
-        expect(message).not.toHaveBeenCalled();
-        expect(warn).toHaveBeenCalledTimes(1);
-        expect(fail).not.toHaveBeenCalled();
+          const prHygiene = makePrHygiene({
+            message,
+            warn,
+            fail,
+            prTitle,
+          });
+
+          prHygiene({ imperativeMood: { level: 'warn' } });
+
+          expect(message).not.toHaveBeenCalled();
+          expect(warn).toHaveBeenCalledTimes(1);
+          expect(fail).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('with the `level` set to `fail`', () => {
+        it('emits a failure', () => {
+          const message = jest.fn();
+          const warn = jest.fn();
+          const fail = jest.fn();
+
+          const prHygiene = makePrHygiene({
+            message,
+            warn,
+            fail,
+            prTitle,
+          });
+
+          prHygiene({ imperativeMood: { level: 'fail' } });
+
+          expect(message).not.toHaveBeenCalled();
+          expect(warn).not.toHaveBeenCalled();
+          expect(fail).toHaveBeenCalledTimes(1);
+        });
       });
     });
   });

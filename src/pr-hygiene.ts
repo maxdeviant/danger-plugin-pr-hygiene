@@ -11,6 +11,13 @@ import {
 } from './rules';
 import { EmitLevel } from './types';
 
+const optionsOrDefaults =
+  <T>(defaults: T) =>
+  (options: Partial<T> | undefined) => ({
+    ...defaults,
+    ...options,
+  });
+
 export interface PrHygieneContext {
   message: (message: string) => void;
   warn: (message: string) => void;
@@ -20,10 +27,12 @@ export interface PrHygieneContext {
 
 export type ConfigurationOrOff<T> = T | 'off';
 
+export type PartialConfigurationOrOff<T> = ConfigurationOrOff<Partial<T>>;
+
 export interface PrHygieneOptions {
-  imperativeMood?: ConfigurationOrOff<UseImperativeMoodConfig>;
-  sentenceCase?: ConfigurationOrOff<UseSentenceCaseConfig>;
-  noTrailingPunctuation?: ConfigurationOrOff<NoTrailingPunctuationConfig>;
+  imperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
+  sentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
+  noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
 }
 
 export const makePrHygiene = (ctx: PrHygieneContext) => {
@@ -33,30 +42,37 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
     fail: ctx.fail,
   };
 
-  return ({
-    imperativeMood = defaultUseImperativeMoodConfig,
-    sentenceCase = defaultUseSentenceCaseConfig,
-    noTrailingPunctuation:
-      noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
-  }: PrHygieneOptions = {}) => {
-    if (imperativeMood !== 'off') {
+  return (options: PrHygieneOptions = {}) => {
+    if (options.imperativeMood !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
+        options.imperativeMood
+      );
+
       useImperativeMood({
-        emit: emitLevelToHandler[imperativeMood.level],
-        message: imperativeMood.message,
+        emit: emitLevelToHandler[ruleOptions.level],
+        message: ruleOptions.message,
       })(ctx.prTitle);
     }
 
-    if (sentenceCase !== 'off') {
+    if (options.sentenceCase !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultUseSentenceCaseConfig)(
+        options.sentenceCase
+      );
+
       useSentenceCase({
-        emit: emitLevelToHandler[sentenceCase.level],
-        message: sentenceCase.message,
+        emit: emitLevelToHandler[ruleOptions.level],
+        message: ruleOptions.message,
       })(ctx.prTitle);
     }
 
-    if (noTrailingPunctuationConfig !== 'off') {
+    if (options.noTrailingPunctuation !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultNoTrailingPunctuationConfig)(
+        options.noTrailingPunctuation
+      );
+
       noTrailingPunctuation({
-        emit: emitLevelToHandler[noTrailingPunctuationConfig.level],
-        message: noTrailingPunctuationConfig.message,
+        emit: emitLevelToHandler[ruleOptions.level],
+        message: ruleOptions.message,
       })(ctx.prTitle);
     }
   };
