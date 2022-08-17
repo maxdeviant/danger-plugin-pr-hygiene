@@ -1,27 +1,22 @@
-import { DangerDSLType } from 'danger';
 import {
-  defaultNoTrailingPunctuationConfig,
+  UseImperativeMoodConfig,
+  UseSentenceCaseConfig,
+  NoTrailingPunctuationConfig,
   defaultUseImperativeMoodConfig,
   defaultUseSentenceCaseConfig,
-  noTrailingPunctuation,
-  NoTrailingPunctuationConfig,
+  defaultNoTrailingPunctuationConfig,
   useImperativeMood,
-  UseImperativeMoodConfig,
   useSentenceCase,
-  UseSentenceCaseConfig,
+  noTrailingPunctuation,
 } from './rules';
 import { EmitLevel } from './types';
 
-declare var danger: DangerDSLType;
-declare function message(message: string): void;
-declare function warn(message: string): void;
-declare function fail(message: string): void;
-
-const emitLevelToHandler: Record<EmitLevel, (message: string) => void> = {
-  message,
-  warn,
-  fail,
-};
+export interface PrHygieneContext {
+  message: (message: string) => void;
+  warn: (message: string) => void;
+  fail: (message: string) => void;
+  prTitle: string;
+}
 
 export type ConfigurationOrOff<T> = T | 'off';
 
@@ -31,30 +26,38 @@ export interface PrHygieneOptions {
   noTrailingPunctuation?: ConfigurationOrOff<NoTrailingPunctuationConfig>;
 }
 
-export const prHygiene = ({
-  imperativeMood = defaultUseImperativeMoodConfig,
-  sentenceCase = defaultUseSentenceCaseConfig,
-  noTrailingPunctuation:
-    noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
-}: PrHygieneOptions = {}) => {
-  if (imperativeMood !== 'off') {
-    useImperativeMood({
-      emit: emitLevelToHandler[imperativeMood.level],
-      message: imperativeMood.message,
-    })(danger.github.pr.title);
-  }
+export const makePrHygiene = (ctx: PrHygieneContext) => {
+  const emitLevelToHandler: Record<EmitLevel, (message: string) => void> = {
+    message: ctx.message,
+    warn: ctx.warn,
+    fail: ctx.fail,
+  };
 
-  if (sentenceCase !== 'off') {
-    useSentenceCase({
-      emit: emitLevelToHandler[sentenceCase.level],
-      message: sentenceCase.message,
-    })(danger.github.pr.title);
-  }
+  return ({
+    imperativeMood = defaultUseImperativeMoodConfig,
+    sentenceCase = defaultUseSentenceCaseConfig,
+    noTrailingPunctuation:
+      noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
+  }: PrHygieneOptions = {}) => {
+    if (imperativeMood !== 'off') {
+      useImperativeMood({
+        emit: emitLevelToHandler[imperativeMood.level],
+        message: imperativeMood.message,
+      })(ctx.prTitle);
+    }
 
-  if (noTrailingPunctuationConfig !== 'off') {
-    noTrailingPunctuation({
-      emit: emitLevelToHandler[noTrailingPunctuationConfig.level],
-      message: noTrailingPunctuationConfig.message,
-    })(danger.github.pr.title);
-  }
+    if (sentenceCase !== 'off') {
+      useSentenceCase({
+        emit: emitLevelToHandler[sentenceCase.level],
+        message: sentenceCase.message,
+      })(ctx.prTitle);
+    }
+
+    if (noTrailingPunctuationConfig !== 'off') {
+      noTrailingPunctuation({
+        emit: emitLevelToHandler[noTrailingPunctuationConfig.level],
+        message: noTrailingPunctuationConfig.message,
+      })(ctx.prTitle);
+    }
+  };
 };

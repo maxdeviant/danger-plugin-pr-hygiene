@@ -1,1 +1,1 @@
-export * from './pr-hygiene';
+export * from './plugin';

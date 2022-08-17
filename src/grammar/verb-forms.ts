@@ -16,4 +16,7 @@ export const isThirdPersonSingular = (word: string) =>
 
 export const isPastTense = (word: string) => /(.+ed)/.test(word);
 
-export const isPresentParticiple = (word: string) => /((\w)*(ing))/.test(word);
+const presentParticipleExceptions = new Set(['trailing']);
+
+export const isPresentParticiple = (word: string) =>
+  !presentParticipleExceptions.has(word) && /((\w)*(ing))/.test(word);
