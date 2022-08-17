@@ -1,0 +1,18 @@
+{
+  "name": "danger-plugin-pr-hygiene",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:maxdeviant/danger-plugin-pr-hygiene.git",
+  "author": "Marshall Bowers <elliott.codes@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --ignore-path .gitignore --write '**/*.+(js|json|md|ts|tsx)'",
+    "build": "tsc -p ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "danger": "11.1.1",
+    "prettier": "2.7.1",
+    "typescript": "4.7.4"
+  }
+}

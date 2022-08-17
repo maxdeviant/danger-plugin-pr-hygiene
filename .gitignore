@@ -1,3 +1,13 @@
+#
+# danger-plugin-pr-hygiene
+#
+
+lib/
+
+#
+# Node
+#
+
 # Logs
 logs
 *.log
