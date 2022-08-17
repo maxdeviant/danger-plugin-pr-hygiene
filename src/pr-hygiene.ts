@@ -2,10 +2,13 @@ import { DangerDSLType } from 'danger';
 import {
   defaultNoTrailingPunctuationConfig,
   defaultUseImperativeMoodConfig,
+  defaultUseSentenceCaseConfig,
   noTrailingPunctuation,
   NoTrailingPunctuationConfig,
   useImperativeMood,
   UseImperativeMoodConfig,
+  useSentenceCase,
+  UseSentenceCaseConfig,
 } from './rules';
 import { EmitLevel } from './types';
 
@@ -24,11 +27,13 @@ export type ConfigurationOrOff<T> = T | 'off';
 
 export interface PrHygieneOptions {
   imperativeMood?: ConfigurationOrOff<UseImperativeMoodConfig>;
+  sentenceCase?: ConfigurationOrOff<UseSentenceCaseConfig>;
   noTrailingPunctuation?: ConfigurationOrOff<NoTrailingPunctuationConfig>;
 }
 
 export const prHygiene = ({
   imperativeMood = defaultUseImperativeMoodConfig,
+  sentenceCase = defaultUseSentenceCaseConfig,
   noTrailingPunctuation:
     noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
 }: PrHygieneOptions = {}) => {
@@ -36,6 +41,13 @@ export const prHygiene = ({
     useImperativeMood({
       emit: emitLevelToHandler[imperativeMood.level],
       message: imperativeMood.message,
+    })(danger.github.pr.title);
+  }
+
+  if (sentenceCase !== 'off') {
+    useSentenceCase({
+      emit: emitLevelToHandler[sentenceCase.level],
+      message: sentenceCase.message,
     })(danger.github.pr.title);
   }
 
