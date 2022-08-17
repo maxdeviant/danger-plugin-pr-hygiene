@@ -1,7 +1,18 @@
+const thirdPersonSingularVerbs = new Set([
+  'adds',
+  'amends',
+  'changes',
+  'deletes',
+  'fixes',
+  'modifies',
+  'patches',
+  'removes',
+  'reverts',
+  'updates',
+]);
+
 export const isThirdPersonSingular = (word: string) =>
-  ['adds', 'changes', 'updates', 'removes', 'deletes'].includes(
-    word.toLowerCase()
-  );
+  thirdPersonSingularVerbs.has(word.toLowerCase());
 
 export const isPastTense = (word: string) => /(.+ed)/.test(word);
 
