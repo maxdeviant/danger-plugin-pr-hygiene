@@ -43,6 +43,6 @@ export const prHygiene = ({
     noTrailingPunctuation({
       emit: emitLevelToHandler[noTrailingPunctuationConfig.level],
       message: noTrailingPunctuationConfig.message,
-    });
+    })(danger.github.pr.title);
   }
 };
