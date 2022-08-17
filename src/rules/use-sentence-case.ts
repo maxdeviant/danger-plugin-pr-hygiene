@@ -1,4 +1,5 @@
 import { EmitLevel } from '../types';
+import { Rule } from './rule';
 
 export interface UseSentenceCaseConfig {
   level: EmitLevel;
@@ -12,10 +13,8 @@ export const defaultUseSentenceCaseConfig: UseSentenceCaseConfig = {
 
 const isCapitalized = (value: string) => /^[A-Z]/.test(value);
 
-export const useSentenceCase =
-  ({ emit, message }: { emit: (message: string) => void; message: string }) =>
-  (prTitle: string) => {
-    if (!isCapitalized(prTitle)) {
-      emit(message);
-    }
-  };
+export const useSentenceCase: Rule = ctx => prTitle => {
+  if (!isCapitalized(prTitle)) {
+    ctx.emit();
+  }
+};

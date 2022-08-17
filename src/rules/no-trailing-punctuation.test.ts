@@ -2,13 +2,12 @@ import { noTrailingPunctuation } from './no-trailing-punctuation';
 
 describe('noTrailingPunctuation', () => {
   const punctuationMarks = ['.', '!', '?', ',', ':', ';'];
-  const message = 'Violation';
 
   describe('when the PR title does not have any trailing punctuation', () => {
     it('does not a emit a message', () => {
       const emit = jest.fn();
 
-      noTrailingPunctuation({ emit, message })('No trailing punctuation here');
+      noTrailingPunctuation({ emit })('No trailing punctuation here');
 
       expect(emit).not.toHaveBeenCalled();
     });
@@ -20,9 +19,7 @@ describe('noTrailingPunctuation', () => {
       it('emits a message', () => {
         const emit = jest.fn();
 
-        noTrailingPunctuation({ emit, message })(
-          'Fix a nasty bug' + punctuationMark
-        );
+        noTrailingPunctuation({ emit })('Fix a nasty bug' + punctuationMark);
 
         expect(emit).toHaveBeenCalledTimes(1);
       });
@@ -35,7 +32,7 @@ describe('noTrailingPunctuation', () => {
       it('emits a message', () => {
         const emit = jest.fn();
 
-        noTrailingPunctuation({ emit, message })(
+        noTrailingPunctuation({ emit })(
           'Fix a nasty bug' + punctuationMark + punctuationMark
         );
 

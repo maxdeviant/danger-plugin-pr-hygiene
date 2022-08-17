@@ -49,8 +49,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
 
       useImperativeMood({
-        emit: emitLevelToHandler[ruleOptions.level],
-        message: ruleOptions.message,
+        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
       })(ctx.prTitle);
     }
 
@@ -60,8 +59,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
 
       useSentenceCase({
-        emit: emitLevelToHandler[ruleOptions.level],
-        message: ruleOptions.message,
+        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
       })(ctx.prTitle);
     }
 
@@ -71,8 +69,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
 
       noTrailingPunctuation({
-        emit: emitLevelToHandler[ruleOptions.level],
-        message: ruleOptions.message,
+        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
       })(ctx.prTitle);
     }
   };
