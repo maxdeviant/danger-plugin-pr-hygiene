@@ -20,9 +20,11 @@ const emitLevelToHandler: Record<EmitLevel, (message: string) => void> = {
   fail,
 };
 
+export type ConfigurationOrOff<T> = T | 'off';
+
 export interface PrHygieneOptions {
-  imperativeMood?: UseImperativeMoodConfig | 'off';
-  noTrailingPunctuation?: NoTrailingPunctuationConfig | 'off';
+  imperativeMood?: ConfigurationOrOff<UseImperativeMoodConfig>;
+  noTrailingPunctuation?: ConfigurationOrOff<NoTrailingPunctuationConfig>;
 }
 
 export const prHygiene = ({
