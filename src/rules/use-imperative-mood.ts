@@ -23,6 +23,7 @@ export const useImperativeMood: Rule = ctx => prTitle => {
       // which is not in the imperative mood.
       if (index === 0) {
         ctx.emit();
+        break;
       }
     }
   }
