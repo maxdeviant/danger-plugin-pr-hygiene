@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for processing PR titles with prefixes
+- Added `useSentenceCase` rule
+- Added `requirePrefix` rule
+
+### Changed
+
+- Simplified `useImperativeMood` to reduce false positives
+
+### Fixed
+
+- Fixed `noTrailingPunctuation` rule not being applied
+
 ## [0.1.0] - 2022-08-16
 
 ### Added
