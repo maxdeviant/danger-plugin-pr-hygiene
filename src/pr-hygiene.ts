@@ -11,6 +11,17 @@ import {
 } from './rules';
 import { EmitLevel } from './types';
 
+const extractPrefix = (prefixPattern: RegExp) => (prTitle: string) => {
+  const matches = prefixPattern.exec(prTitle);
+  if (!matches) {
+    return { prefix: undefined, suffix: prTitle };
+  }
+
+  const [_matchedText, prefix, suffix] = matches;
+
+  return { prefix, suffix: suffix?.trim() ?? '' };
+};
+
 const optionsOrDefaults =
   <T>(defaults: T) =>
   (options: Partial<T> | undefined) => ({
@@ -43,6 +54,10 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
   };
 
   return (options: PrHygieneOptions = {}) => {
+    const prefixPattern = /([a-z\d\(\)]+):(.*)/;
+
+    const { suffix } = extractPrefix(prefixPattern)(ctx.prTitle);
+
     if (options.imperativeMood !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
         options.imperativeMood
@@ -50,7 +65,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       useImperativeMood({
         emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(ctx.prTitle);
+      })(suffix);
     }
 
     if (options.sentenceCase !== 'off') {
@@ -60,7 +75,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       useSentenceCase({
         emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(ctx.prTitle);
+      })(suffix);
     }
 
     if (options.noTrailingPunctuation !== 'off') {
@@ -70,7 +85,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       noTrailingPunctuation({
         emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(ctx.prTitle);
+      })(suffix);
     }
   };
 };

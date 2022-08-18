@@ -14,9 +14,13 @@ const thirdPersonSingularVerbs = new Set([
 export const isThirdPersonSingular = (word: string) =>
   thirdPersonSingularVerbs.has(word.toLowerCase());
 
-export const isPastTense = (word: string) => /(.+ed)/.test(word);
+const pastTenseExceptions = new Set(['provided', 'shipped']);
+
+export const isPastTense = (word: string) =>
+  !pastTenseExceptions.has(word.toLowerCase()) && /(.+ed)/.test(word);
 
 const presentParticipleExceptions = new Set(['trailing']);
 
 export const isPresentParticiple = (word: string) =>
-  !presentParticipleExceptions.has(word) && /((\w)*(ing))/.test(word);
+  !presentParticipleExceptions.has(word.toLowerCase()) &&
+  /((\w)*(ing))/.test(word);
