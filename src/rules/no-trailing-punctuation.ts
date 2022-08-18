@@ -1,3 +1,4 @@
+import * as E from 'fp-ts/Either';
 import { EmitLevel } from '../types';
 import { Rule } from './rule';
 
@@ -11,8 +12,10 @@ export const defaultNoTrailingPunctuationConfig: NoTrailingPunctuationConfig = {
   message: 'Do not end PR titles with punctuation.',
 };
 
-export const noTrailingPunctuation: Rule = ctx => prTitle => {
+export const noTrailingPunctuation: Rule = prTitle => {
   if (/[.!?,:;]+$/.test(prTitle)) {
-    ctx.emit();
+    return E.left(['VIOLATION']);
   }
+
+  return E.right(undefined);
 };

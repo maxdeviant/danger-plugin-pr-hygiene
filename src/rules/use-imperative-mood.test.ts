@@ -2,42 +2,34 @@ import { useImperativeMood } from './use-imperative-mood';
 
 describe('useImperativeMood', () => {
   describe('when the PR title is written in the imperative mood', () => {
-    it('does not emit a message', () => {
-      const emit = jest.fn();
-
-      useImperativeMood({ emit })('Add brand new feature');
-
-      expect(emit).not.toHaveBeenCalled();
+    it('returns an empty Right', () => {
+      expect(useImperativeMood('Add brand new feature')).toEqualRight(
+        undefined
+      );
     });
   });
 
   describe('when the PR title contains a third-person singular verb', () => {
-    it('emits a message', () => {
-      const emit = jest.fn();
-
-      useImperativeMood({ emit })('Adds a brand new feature');
-
-      expect(emit).toHaveBeenCalledTimes(1);
+    it('returns a Left with a violation', () => {
+      expect(useImperativeMood('Adds a brand new feature')).toEqualLeft([
+        'VIOLATION',
+      ]);
     });
   });
 
   describe('when the PR title contains a past-tense verb', () => {
-    it('emits a message', () => {
-      const emit = jest.fn();
-
-      useImperativeMood({ emit })('Added a brand new feature');
-
-      expect(emit).toHaveBeenCalledTimes(1);
+    it('returns a Left with a violation', () => {
+      expect(useImperativeMood('Added a brand new feature')).toEqualLeft([
+        'VIOLATION',
+      ]);
     });
   });
 
   describe('when the PR title contains a present participle verb', () => {
-    it('emits a message', () => {
-      const emit = jest.fn();
-
-      useImperativeMood({ emit })('Adding a brand new feature');
-
-      expect(emit).toHaveBeenCalledTimes(1);
+    it('returns a Left with a violation', () => {
+      expect(useImperativeMood('Adding a brand new feature')).toEqualLeft([
+        'VIOLATION',
+      ]);
     });
   });
 });

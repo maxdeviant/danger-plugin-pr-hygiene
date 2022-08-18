@@ -1,5 +1,3 @@
-export interface RuleContext {
-  emit: () => void;
-}
+import { Either } from 'fp-ts/Either';
 
-export type Rule = (ctx: RuleContext) => (prTitle: string) => void;
+export type Rule = (prTitle: string) => Either<string[], void>;

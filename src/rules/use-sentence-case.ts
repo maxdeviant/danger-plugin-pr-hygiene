@@ -1,3 +1,4 @@
+import * as E from 'fp-ts/Either';
 import { EmitLevel } from '../types';
 import { Rule } from './rule';
 
@@ -13,8 +14,10 @@ export const defaultUseSentenceCaseConfig: UseSentenceCaseConfig = {
 
 const isCapitalized = (value: string) => /^[A-Z]/.test(value);
 
-export const useSentenceCase: Rule = ctx => prTitle => {
+export const useSentenceCase: Rule = prTitle => {
   if (!isCapitalized(prTitle)) {
-    ctx.emit();
+    return E.left(['VIOLATION']);
   }
+
+  return E.right(undefined);
 };

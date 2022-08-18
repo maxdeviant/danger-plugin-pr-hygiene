@@ -1,13 +1,15 @@
+import * as E from 'fp-ts/Either';
+import { pipe } from 'fp-ts/function';
 import {
-  UseImperativeMoodConfig,
-  UseSentenceCaseConfig,
-  NoTrailingPunctuationConfig,
+  defaultNoTrailingPunctuationConfig,
   defaultUseImperativeMoodConfig,
   defaultUseSentenceCaseConfig,
-  defaultNoTrailingPunctuationConfig,
-  useImperativeMood,
-  useSentenceCase,
   noTrailingPunctuation,
+  NoTrailingPunctuationConfig,
+  useImperativeMood,
+  UseImperativeMoodConfig,
+  useSentenceCase,
+  UseSentenceCaseConfig,
 } from './rules';
 import { EmitLevel } from './types';
 
@@ -63,9 +65,14 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
         options.imperativeMood
       );
 
-      useImperativeMood({
-        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(suffix);
+      pipe(
+        useImperativeMood(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
     }
 
     if (options.sentenceCase !== 'off') {
@@ -73,9 +80,14 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
         options.sentenceCase
       );
 
-      useSentenceCase({
-        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(suffix);
+      pipe(
+        useSentenceCase(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
     }
 
     if (options.noTrailingPunctuation !== 'off') {
@@ -83,9 +95,14 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
         options.noTrailingPunctuation
       );
 
-      noTrailingPunctuation({
-        emit: () => emitLevelToHandler[ruleOptions.level](ruleOptions.message),
-      })(suffix);
+      pipe(
+        noTrailingPunctuation(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
     }
   };
 };

@@ -1,3 +1,4 @@
+import * as E from 'fp-ts/Either';
 import { isBareInfinitive } from '../grammar';
 import { EmitLevel } from '../types';
 import { Rule } from './rule';
@@ -12,7 +13,7 @@ export const defaultUseImperativeMoodConfig: UseImperativeMoodConfig = {
   message: 'Write PR titles using the imperative mood.',
 };
 
-export const useImperativeMood: Rule = ctx => prTitle => {
+export const useImperativeMood: Rule = prTitle => {
   const words = prTitle.split(' ');
   const indexedWords = words.map((word, index) => ({ word, index }));
 
@@ -22,9 +23,10 @@ export const useImperativeMood: Rule = ctx => prTitle => {
       // then we can infer that it is a PR title along the lines of "Adds X",
       // which is not in the imperative mood.
       if (index === 0) {
-        ctx.emit();
-        break;
+        return E.left(['VIOLATION']);
       }
     }
   }
+
+  return E.right(undefined);
 };
