@@ -50,7 +50,7 @@ describe('prHygiene: No Trailing Punctuation', () => {
           prTitle,
         });
 
-        prHygiene({ noTrailingPunctuation: { level: 'message' } });
+        prHygiene({ rules: { noTrailingPunctuation: { level: 'message' } } });
 
         expect(message).toHaveBeenCalledTimes(1);
         expect(warn).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('prHygiene: No Trailing Punctuation', () => {
           prTitle,
         });
 
-        prHygiene({ noTrailingPunctuation: { level: 'warn' } });
+        prHygiene({ rules: { noTrailingPunctuation: { level: 'warn' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('prHygiene: No Trailing Punctuation', () => {
           prTitle,
         });
 
-        prHygiene({ noTrailingPunctuation: { level: 'fail' } });
+        prHygiene({ rules: { noTrailingPunctuation: { level: 'fail' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('prHygiene: No Trailing Punctuation', () => {
           prTitle,
         });
 
-        prHygiene({ noTrailingPunctuation: 'off' });
+        prHygiene({ rules: { noTrailingPunctuation: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();

@@ -48,7 +48,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ imperativeMood: { level: 'message' } });
+          prHygiene({ rules: { imperativeMood: { level: 'message' } } });
 
           expect(message).toHaveBeenCalledTimes(1);
           expect(warn).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ imperativeMood: { level: 'warn' } });
+          prHygiene({ rules: { imperativeMood: { level: 'warn' } } });
 
           expect(message).not.toHaveBeenCalled();
           expect(warn).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ imperativeMood: { level: 'fail' } });
+          prHygiene({ rules: { imperativeMood: { level: 'fail' } } });
 
           expect(message).not.toHaveBeenCalled();
           expect(warn).not.toHaveBeenCalled();
@@ -114,7 +114,7 @@ describe('prHygiene: Imperative Mood', () => {
           prTitle,
         });
 
-        prHygiene({ imperativeMood: 'off' });
+        prHygiene({ rules: { imperativeMood: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();

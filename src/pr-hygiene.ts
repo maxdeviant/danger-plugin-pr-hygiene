@@ -37,10 +37,12 @@ export type PartialConfigurationOrOff<T> = ConfigurationOrOff<Partial<T>>;
 
 export interface PrHygieneOptions {
   prefixPattern?: RegExp;
-  requirePrefix?: PartialConfigurationOrOff<RequirePrefixConfig>;
-  imperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
-  sentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
-  noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
+  rules?: {
+    requirePrefix?: PartialConfigurationOrOff<RequirePrefixConfig>;
+    imperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
+    sentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
+    noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
+  };
 }
 
 export const makePrHygiene = (ctx: PrHygieneContext) => {
@@ -51,17 +53,19 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
   };
 
   return (options: PrHygieneOptions = {}) => {
+    const { rules = {} } = options;
+
     const prefixPattern = options.prefixPattern ?? /([a-z\d\(\)]+):(.*)/;
 
     const { suffix } = extractPrefix(prefixPattern)(ctx.prTitle);
 
-    if (!options.requirePrefix) {
-      options.requirePrefix = 'off';
+    if (!rules.requirePrefix) {
+      rules.requirePrefix = 'off';
     }
 
-    if (options.requirePrefix !== 'off') {
+    if (rules.requirePrefix !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultRequirePrefixConfig)(
-        options.requirePrefix
+        rules.requirePrefix
       );
 
       pipe(
@@ -74,9 +78,9 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    if (options.imperativeMood !== 'off') {
+    if (rules.imperativeMood !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
-        options.imperativeMood
+        rules.imperativeMood
       );
 
       pipe(
@@ -89,9 +93,9 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    if (options.sentenceCase !== 'off') {
+    if (rules.sentenceCase !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseSentenceCaseConfig)(
-        options.sentenceCase
+        rules.sentenceCase
       );
 
       pipe(
@@ -104,9 +108,9 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    if (options.noTrailingPunctuation !== 'off') {
+    if (rules.noTrailingPunctuation !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultNoTrailingPunctuationConfig)(
-        options.noTrailingPunctuation
+        rules.noTrailingPunctuation
       );
 
       pipe(

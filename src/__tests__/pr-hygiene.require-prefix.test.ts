@@ -27,7 +27,7 @@ describe('prHygiene: Require Prefix', () => {
           prTitle,
         });
 
-        prHygiene({ requirePrefix: {} });
+        prHygiene({ rules: { requirePrefix: {} } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('prHygiene: Require Prefix', () => {
           prTitle,
         });
 
-        prHygiene({ requirePrefix: { level: 'message' } });
+        prHygiene({ rules: { requirePrefix: { level: 'message' } } });
 
         expect(message).toHaveBeenCalledTimes(1);
         expect(warn).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('prHygiene: Require Prefix', () => {
           prTitle,
         });
 
-        prHygiene({ requirePrefix: { level: 'warn' } });
+        prHygiene({ rules: { requirePrefix: { level: 'warn' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('prHygiene: Require Prefix', () => {
           prTitle,
         });
 
-        prHygiene({ requirePrefix: { level: 'fail' } });
+        prHygiene({ rules: { requirePrefix: { level: 'fail' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('prHygiene: Require Prefix', () => {
           prTitle,
         });
 
-        prHygiene({ requirePrefix: 'off' });
+        prHygiene({ rules: { requirePrefix: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();

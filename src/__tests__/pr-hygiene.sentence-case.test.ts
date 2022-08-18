@@ -50,7 +50,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ sentenceCase: { level: 'message' } });
+        prHygiene({ rules: { sentenceCase: { level: 'message' } } });
 
         expect(message).toHaveBeenCalledTimes(1);
         expect(warn).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ sentenceCase: { level: 'warn' } });
+        prHygiene({ rules: { sentenceCase: { level: 'warn' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ sentenceCase: { level: 'fail' } });
+        prHygiene({ rules: { sentenceCase: { level: 'fail' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ sentenceCase: 'off' });
+        prHygiene({ rules: { sentenceCase: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
