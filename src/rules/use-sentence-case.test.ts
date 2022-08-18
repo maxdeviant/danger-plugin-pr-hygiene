@@ -12,7 +12,7 @@ describe('useSentenceCase', () => {
   describe('when the PR title starts with a lowercase letter', () => {
     it('returns a Left with a violation', () => {
       expect(useSentenceCase('add a shiny new feature')).toEqualLeft([
-        'VIOLATION',
+        { span: [0, 1] },
       ]);
     });
   });

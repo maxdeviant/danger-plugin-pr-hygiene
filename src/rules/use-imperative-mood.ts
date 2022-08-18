@@ -23,7 +23,7 @@ export const useImperativeMood: Rule = prTitle => {
       // then we can infer that it is a PR title along the lines of "Adds X",
       // which is not in the imperative mood.
       if (index === 0) {
-        return E.left(['VIOLATION']);
+        return E.left([{ span: [index, index + word.length] }]);
       }
     }
   }

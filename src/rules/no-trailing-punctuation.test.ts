@@ -15,9 +15,11 @@ describe('noTrailingPunctuation', () => {
     'when the PR title ends with `%s`',
     punctuationMark => {
       it('returns a Left containing a violation', () => {
-        expect(
-          noTrailingPunctuation('Fix a nasty bug' + punctuationMark)
-        ).toEqualLeft(['VIOLATION']);
+        const baseTitle = 'Fix a nasty bug';
+
+        expect(noTrailingPunctuation(baseTitle + punctuationMark)).toEqualLeft([
+          { span: [baseTitle.length, baseTitle.length + 1] },
+        ]);
       });
     }
   );
@@ -26,11 +28,11 @@ describe('noTrailingPunctuation', () => {
     'when the PR title ends with multiple `%s`s',
     punctuationMark => {
       it('returns a Left containing a violation', () => {
+        const baseTitle = 'Fix a nasty bug';
+
         expect(
-          noTrailingPunctuation(
-            'Fix a nasty bug' + punctuationMark + punctuationMark
-          )
-        ).toEqualLeft(['VIOLATION']);
+          noTrailingPunctuation(baseTitle + punctuationMark + punctuationMark)
+        ).toEqualLeft([{ span: [baseTitle.length, baseTitle.length + 2] }]);
       });
     }
   );

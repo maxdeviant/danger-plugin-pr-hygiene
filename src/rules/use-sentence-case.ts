@@ -12,11 +12,9 @@ export const defaultUseSentenceCaseConfig: UseSentenceCaseConfig = {
   message: 'Write PR titles using sentence case.',
 };
 
-const isCapitalized = (value: string) => /^[A-Z]/.test(value);
-
 export const useSentenceCase: Rule = prTitle => {
-  if (!isCapitalized(prTitle)) {
-    return E.left(['VIOLATION']);
+  if (/^[a-z]/.test(prTitle)) {
+    return E.left([{ span: [0, 1] }]);
   }
 
   return E.right(undefined);

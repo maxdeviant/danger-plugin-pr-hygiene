@@ -12,7 +12,7 @@ describe('useImperativeMood', () => {
   describe('when the PR title contains a third-person singular verb', () => {
     it('returns a Left with a violation', () => {
       expect(useImperativeMood('Adds a brand new feature')).toEqualLeft([
-        'VIOLATION',
+        { span: [0, 'Adds'.length] },
       ]);
     });
   });
@@ -20,7 +20,7 @@ describe('useImperativeMood', () => {
   describe('when the PR title contains a past-tense verb', () => {
     it('returns a Left with a violation', () => {
       expect(useImperativeMood('Added a brand new feature')).toEqualLeft([
-        'VIOLATION',
+        { span: [0, 'Added'.length] },
       ]);
     });
   });
@@ -28,7 +28,7 @@ describe('useImperativeMood', () => {
   describe('when the PR title contains a present participle verb', () => {
     it('returns a Left with a violation', () => {
       expect(useImperativeMood('Adding a brand new feature')).toEqualLeft([
-        'VIOLATION',
+        { span: [0, 'Adding'.length] },
       ]);
     });
   });

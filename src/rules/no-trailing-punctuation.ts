@@ -13,8 +13,11 @@ export const defaultNoTrailingPunctuationConfig: NoTrailingPunctuationConfig = {
 };
 
 export const noTrailingPunctuation: Rule = prTitle => {
-  if (/[.!?,:;]+$/.test(prTitle)) {
-    return E.left(['VIOLATION']);
+  const matches = /[.!?,:;]+$/.exec(prTitle);
+  if (matches?.[0]) {
+    const [match] = matches;
+
+    return E.left([{ span: [matches.index, matches.index + match.length] }]);
   }
 
   return E.right(undefined);
