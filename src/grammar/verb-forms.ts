@@ -8,12 +8,18 @@ const thirdPersonSingularVerbs = new Set([
   'patches',
   'removes',
   'reverts',
+  'tweaks',
   'updates',
 ]);
 
-export const isThirdPersonSingular = (word: string) =>
-  thirdPersonSingularVerbs.has(word.toLowerCase());
+export const isThirdPersonSingular = (verb: string) =>
+  thirdPersonSingularVerbs.has(verb.toLowerCase());
 
-export const isPastTense = (word: string) => /(.+ed)/.test(word);
+export const isPastTense = (verb: string) => /(.+ed)/.test(verb);
 
-export const isPresentParticiple = (word: string) => /((\w)*(ing))/.test(word);
+export const isPresentParticiple = (verb: string) => /((\w)*(ing))/.test(verb);
+
+export const isBareInfinitive = (verb: string) =>
+  !isThirdPersonSingular(verb) &&
+  !isPastTense(verb) &&
+  !isPresentParticiple(verb);

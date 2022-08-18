@@ -1,48 +1,126 @@
-import { DangerDSLType } from 'danger';
+import * as E from 'fp-ts/Either';
+import { pipe } from 'fp-ts/function';
+import { extractPrefix } from './pr-title';
 import {
   defaultNoTrailingPunctuationConfig,
+  defaultRequirePrefixConfig,
   defaultUseImperativeMoodConfig,
+  defaultUseSentenceCaseConfig,
   noTrailingPunctuation,
   NoTrailingPunctuationConfig,
+  requirePrefix,
+  RequirePrefixConfig,
   useImperativeMood,
   UseImperativeMoodConfig,
+  useSentenceCase,
+  UseSentenceCaseConfig,
 } from './rules';
 import { EmitLevel } from './types';
 
-declare var danger: DangerDSLType;
-declare function message(message: string): void;
-declare function warn(message: string): void;
-declare function fail(message: string): void;
+const optionsOrDefaults =
+  <T>(defaults: T) =>
+  (options: Partial<T> | undefined) => ({
+    ...defaults,
+    ...options,
+  });
 
-const emitLevelToHandler: Record<EmitLevel, (message: string) => void> = {
-  message,
-  warn,
-  fail,
-};
+export interface PrHygieneContext {
+  message: (message: string) => void;
+  warn: (message: string) => void;
+  fail: (message: string) => void;
+  prTitle: string;
+}
 
 export type ConfigurationOrOff<T> = T | 'off';
 
+export type PartialConfigurationOrOff<T> = ConfigurationOrOff<Partial<T>>;
+
 export interface PrHygieneOptions {
-  imperativeMood?: ConfigurationOrOff<UseImperativeMoodConfig>;
-  noTrailingPunctuation?: ConfigurationOrOff<NoTrailingPunctuationConfig>;
+  prefixPattern?: RegExp;
+  rules?: {
+    requirePrefix?: PartialConfigurationOrOff<RequirePrefixConfig>;
+    useImperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
+    useSentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
+    noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
+  };
 }
 
-export const prHygiene = ({
-  imperativeMood = defaultUseImperativeMoodConfig,
-  noTrailingPunctuation:
-    noTrailingPunctuationConfig = defaultNoTrailingPunctuationConfig,
-}: PrHygieneOptions = {}) => {
-  if (imperativeMood !== 'off') {
-    useImperativeMood({
-      emit: emitLevelToHandler[imperativeMood.level],
-      message: imperativeMood.message,
-    })(danger.github.pr.title);
-  }
+export const makePrHygiene = (ctx: PrHygieneContext) => {
+  const emitLevelToHandler: Record<EmitLevel, (message: string) => void> = {
+    message: ctx.message,
+    warn: ctx.warn,
+    fail: ctx.fail,
+  };
 
-  if (noTrailingPunctuationConfig !== 'off') {
-    noTrailingPunctuation({
-      emit: emitLevelToHandler[noTrailingPunctuationConfig.level],
-      message: noTrailingPunctuationConfig.message,
-    })(danger.github.pr.title);
-  }
+  return (options: PrHygieneOptions = {}) => {
+    const { rules = {} } = options;
+
+    const prefixPattern = options.prefixPattern ?? /([a-z\d\(\)]+):(.*)/;
+
+    const { suffix } = extractPrefix(prefixPattern)(ctx.prTitle);
+
+    if (!rules.requirePrefix) {
+      rules.requirePrefix = 'off';
+    }
+
+    if (rules.requirePrefix !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultRequirePrefixConfig)(
+        rules.requirePrefix
+      );
+
+      pipe(
+        requirePrefix(prefixPattern)(ctx.prTitle),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
+    }
+
+    if (rules.useImperativeMood !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
+        rules.useImperativeMood
+      );
+
+      pipe(
+        useImperativeMood(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
+    }
+
+    if (rules.useSentenceCase !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultUseSentenceCaseConfig)(
+        rules.useSentenceCase
+      );
+
+      pipe(
+        useSentenceCase(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
+    }
+
+    if (rules.noTrailingPunctuation !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultNoTrailingPunctuationConfig)(
+        rules.noTrailingPunctuation
+      );
+
+      pipe(
+        noTrailingPunctuation(suffix),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
+    }
+  };
 };

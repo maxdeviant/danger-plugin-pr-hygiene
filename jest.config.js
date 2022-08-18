@@ -8,5 +8,6 @@ module.exports = {
   },
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/lib/'],
+  setupFilesAfterEnv: ['@relmify/jest-fp-ts'],
   clearMocks: true,
 };

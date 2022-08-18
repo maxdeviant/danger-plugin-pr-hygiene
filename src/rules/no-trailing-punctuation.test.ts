@@ -2,29 +2,24 @@ import { noTrailingPunctuation } from './no-trailing-punctuation';
 
 describe('noTrailingPunctuation', () => {
   const punctuationMarks = ['.', '!', '?', ',', ':', ';'];
-  const message = 'Violation';
 
   describe('when the PR title does not have any trailing punctuation', () => {
-    it('does not a emit a message', () => {
-      const emit = jest.fn();
-
-      noTrailingPunctuation({ emit, message })('No trailing punctuation here');
-
-      expect(emit).not.toHaveBeenCalled();
+    it('returns an empty Right', () => {
+      expect(
+        noTrailingPunctuation('No trailing punctuation here')
+      ).toEqualRight(undefined);
     });
   });
 
   describe.each(punctuationMarks)(
     'when the PR title ends with `%s`',
     punctuationMark => {
-      it('emits a message', () => {
-        const emit = jest.fn();
+      it('returns a Left containing a violation', () => {
+        const baseTitle = 'Fix a nasty bug';
 
-        noTrailingPunctuation({ emit, message })(
-          'Fix a nasty bug' + punctuationMark
-        );
-
-        expect(emit).toHaveBeenCalledTimes(1);
+        expect(noTrailingPunctuation(baseTitle + punctuationMark)).toEqualLeft([
+          { span: [baseTitle.length, baseTitle.length + 1] },
+        ]);
       });
     }
   );
@@ -32,14 +27,12 @@ describe('noTrailingPunctuation', () => {
   describe.each(punctuationMarks)(
     'when the PR title ends with multiple `%s`s',
     punctuationMark => {
-      it('emits a message', () => {
-        const emit = jest.fn();
+      it('returns a Left containing a violation', () => {
+        const baseTitle = 'Fix a nasty bug';
 
-        noTrailingPunctuation({ emit, message })(
-          'Fix a nasty bug' + punctuationMark + punctuationMark
-        );
-
-        expect(emit).toHaveBeenCalledTimes(1);
+        expect(
+          noTrailingPunctuation(baseTitle + punctuationMark + punctuationMark)
+        ).toEqualLeft([{ span: [baseTitle.length, baseTitle.length + 2] }]);
       });
     }
   );

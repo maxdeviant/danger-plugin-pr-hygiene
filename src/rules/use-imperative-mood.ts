@@ -1,9 +1,7 @@
-import {
-  isPastTense,
-  isPresentParticiple,
-  isThirdPersonSingular,
-} from '../grammar';
+import * as E from 'fp-ts/Either';
+import { isBareInfinitive } from '../grammar';
 import { EmitLevel } from '../types';
+import { Rule } from './rule';
 
 export interface UseImperativeMoodConfig {
   level: EmitLevel;
@@ -15,20 +13,20 @@ export const defaultUseImperativeMoodConfig: UseImperativeMoodConfig = {
   message: 'Write PR titles using the imperative mood.',
 };
 
-export const useImperativeMood =
-  ({ emit, message }: { emit: (message: string) => void; message: string }) =>
-  (prTitle: string) => {
-    const words = prTitle.split(' ');
+export const useImperativeMood: Rule = prTitle => {
+  const words = prTitle.split(' ');
+  const indexedWords = words.map((word, index) => ({ word, index }));
 
-    const thirdPersonSingularWords = words.filter(isThirdPersonSingular);
-    const pastTenseWords = words.filter(isPastTense);
-    const presentParticipleWords = words.filter(isPresentParticiple);
-
-    if (
-      thirdPersonSingularWords.length ||
-      pastTenseWords.length ||
-      presentParticipleWords.length
-    ) {
-      emit(message);
+  for (const { word, index } of indexedWords) {
+    if (!isBareInfinitive(word)) {
+      // If the PR title starts with a word that is not in its bare infinitive
+      // then we can infer that it is a PR title along the lines of "Adds X",
+      // which is not in the imperative mood.
+      if (index === 0) {
+        return E.left([{ span: [index, index + word.length] }]);
+      }
     }
-  };
+  }
+
+  return E.right(undefined);
+};
