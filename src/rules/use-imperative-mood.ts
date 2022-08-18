@@ -1,8 +1,4 @@
-import {
-  isPastTense,
-  isPresentParticiple,
-  isThirdPersonSingular,
-} from '../grammar';
+import { isBareInfinitive } from '../grammar';
 import { EmitLevel } from '../types';
 import { Rule } from './rule';
 
@@ -18,16 +14,16 @@ export const defaultUseImperativeMoodConfig: UseImperativeMoodConfig = {
 
 export const useImperativeMood: Rule = ctx => prTitle => {
   const words = prTitle.split(' ');
+  const indexedWords = words.map((word, index) => ({ word, index }));
 
-  const thirdPersonSingularWords = words.filter(isThirdPersonSingular);
-  const pastTenseWords = words.filter(isPastTense);
-  const presentParticipleWords = words.filter(isPresentParticiple);
-
-  if (
-    thirdPersonSingularWords.length ||
-    pastTenseWords.length ||
-    presentParticipleWords.length
-  ) {
-    ctx.emit();
+  for (const { word, index } of indexedWords) {
+    if (!isBareInfinitive(word)) {
+      // If the PR title starts with a word that is not in its bare infinitive
+      // then we can infer that it is a PR title along the lines of "Adds X",
+      // which is not in the imperative mood.
+      if (index === 0) {
+        ctx.emit();
+      }
+    }
   }
 };

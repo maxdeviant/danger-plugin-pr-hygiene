@@ -8,19 +8,18 @@ const thirdPersonSingularVerbs = new Set([
   'patches',
   'removes',
   'reverts',
+  'tweaks',
   'updates',
 ]);
 
-export const isThirdPersonSingular = (word: string) =>
-  thirdPersonSingularVerbs.has(word.toLowerCase());
+export const isThirdPersonSingular = (verb: string) =>
+  thirdPersonSingularVerbs.has(verb.toLowerCase());
 
-const pastTenseExceptions = new Set(['provided', 'shipped']);
+export const isPastTense = (verb: string) => /(.+ed)/.test(verb);
 
-export const isPastTense = (word: string) =>
-  !pastTenseExceptions.has(word.toLowerCase()) && /(.+ed)/.test(word);
+export const isPresentParticiple = (verb: string) => /((\w)*(ing))/.test(verb);
 
-const presentParticipleExceptions = new Set(['trailing']);
-
-export const isPresentParticiple = (word: string) =>
-  !presentParticipleExceptions.has(word.toLowerCase()) &&
-  /((\w)*(ing))/.test(word);
+export const isBareInfinitive = (verb: string) =>
+  !isThirdPersonSingular(verb) &&
+  !isPastTense(verb) &&
+  !isPresentParticiple(verb);
