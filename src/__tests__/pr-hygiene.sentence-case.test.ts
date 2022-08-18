@@ -100,4 +100,27 @@ describe('prHygiene: Sentence Case', () => {
       });
     });
   });
+
+  describe('when disabled', () => {
+    describe.each(FAILING_PR_TITLES)('given "%s"', prTitle => {
+      it('does not emit anything', () => {
+        const message = jest.fn();
+        const warn = jest.fn();
+        const fail = jest.fn();
+
+        const prHygiene = makePrHygiene({
+          message,
+          warn,
+          fail,
+          prTitle,
+        });
+
+        prHygiene({ sentenceCase: 'off' });
+
+        expect(message).not.toHaveBeenCalled();
+        expect(warn).not.toHaveBeenCalled();
+        expect(fail).not.toHaveBeenCalled();
+      });
+    });
+  });
 });
