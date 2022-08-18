@@ -1,28 +1,21 @@
 import * as E from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
+import { extractPrefix } from './pr-title';
 import {
   defaultNoTrailingPunctuationConfig,
+  defaultRequirePrefixConfig,
   defaultUseImperativeMoodConfig,
   defaultUseSentenceCaseConfig,
   noTrailingPunctuation,
   NoTrailingPunctuationConfig,
+  requirePrefix,
+  RequirePrefixConfig,
   useImperativeMood,
   UseImperativeMoodConfig,
   useSentenceCase,
   UseSentenceCaseConfig,
 } from './rules';
 import { EmitLevel } from './types';
-
-const extractPrefix = (prefixPattern: RegExp) => (prTitle: string) => {
-  const matches = prefixPattern.exec(prTitle);
-  if (!matches) {
-    return { prefix: undefined, suffix: prTitle };
-  }
-
-  const [_matchedText, prefix, suffix] = matches;
-
-  return { prefix, suffix: suffix?.trim() ?? '' };
-};
 
 const optionsOrDefaults =
   <T>(defaults: T) =>
@@ -43,6 +36,8 @@ export type ConfigurationOrOff<T> = T | 'off';
 export type PartialConfigurationOrOff<T> = ConfigurationOrOff<Partial<T>>;
 
 export interface PrHygieneOptions {
+  prefixPattern?: RegExp;
+  requirePrefix?: PartialConfigurationOrOff<RequirePrefixConfig>;
   imperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
   sentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
   noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
@@ -56,9 +51,28 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
   };
 
   return (options: PrHygieneOptions = {}) => {
-    const prefixPattern = /([a-z\d\(\)]+):(.*)/;
+    const prefixPattern = options.prefixPattern ?? /([a-z\d\(\)]+):(.*)/;
 
     const { suffix } = extractPrefix(prefixPattern)(ctx.prTitle);
+
+    if (!options.requirePrefix) {
+      options.requirePrefix = 'off';
+    }
+
+    if (options.requirePrefix !== 'off') {
+      const ruleOptions = optionsOrDefaults(defaultRequirePrefixConfig)(
+        options.requirePrefix
+      );
+
+      pipe(
+        requirePrefix(prefixPattern)(ctx.prTitle),
+        E.mapLeft(violations => {
+          for (const _violation of violations) {
+            emitLevelToHandler[ruleOptions.level](ruleOptions.message);
+          }
+        })
+      );
+    }
 
     if (options.imperativeMood !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
