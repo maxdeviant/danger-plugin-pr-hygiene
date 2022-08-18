@@ -11,7 +11,7 @@ const FAILING_PR_TITLES = [
   'Removed feature Z',
 ];
 
-describe('prHygiene: Imperative Mood', () => {
+describe('prHygiene: Use Imperative Mood', () => {
   describe('when enabled', () => {
     describe.each(PASSING_PR_TITLES)('given "%s"', prTitle => {
       it('does not emit anything', () => {
@@ -48,7 +48,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ rules: { imperativeMood: { level: 'message' } } });
+          prHygiene({ rules: { useImperativeMood: { level: 'message' } } });
 
           expect(message).toHaveBeenCalledTimes(1);
           expect(warn).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ rules: { imperativeMood: { level: 'warn' } } });
+          prHygiene({ rules: { useImperativeMood: { level: 'warn' } } });
 
           expect(message).not.toHaveBeenCalled();
           expect(warn).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe('prHygiene: Imperative Mood', () => {
             prTitle,
           });
 
-          prHygiene({ rules: { imperativeMood: { level: 'fail' } } });
+          prHygiene({ rules: { useImperativeMood: { level: 'fail' } } });
 
           expect(message).not.toHaveBeenCalled();
           expect(warn).not.toHaveBeenCalled();
@@ -114,7 +114,7 @@ describe('prHygiene: Imperative Mood', () => {
           prTitle,
         });
 
-        prHygiene({ rules: { imperativeMood: 'off' } });
+        prHygiene({ rules: { useImperativeMood: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();

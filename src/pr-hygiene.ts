@@ -39,8 +39,8 @@ export interface PrHygieneOptions {
   prefixPattern?: RegExp;
   rules?: {
     requirePrefix?: PartialConfigurationOrOff<RequirePrefixConfig>;
-    imperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
-    sentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
+    useImperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
+    useSentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
     noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
   };
 }
@@ -78,9 +78,9 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    if (rules.imperativeMood !== 'off') {
+    if (rules.useImperativeMood !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseImperativeMoodConfig)(
-        rules.imperativeMood
+        rules.useImperativeMood
       );
 
       pipe(
@@ -93,9 +93,9 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    if (rules.sentenceCase !== 'off') {
+    if (rules.useSentenceCase !== 'off') {
       const ruleOptions = optionsOrDefaults(defaultUseSentenceCaseConfig)(
-        rules.sentenceCase
+        rules.useSentenceCase
       );
 
       pipe(

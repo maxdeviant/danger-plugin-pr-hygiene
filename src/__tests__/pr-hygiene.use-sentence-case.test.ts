@@ -12,7 +12,7 @@ const FAILING_PR_TITLES = [
   'feat(lang): add Polish language',
 ];
 
-describe('prHygiene: Sentence Case', () => {
+describe('prHygiene: Use Sentence Case', () => {
   describe('when enabled', () => {
     describe.each(PASSING_PR_TITLES)('given "%s"', prTitle => {
       it('does not emit anything', () => {
@@ -50,7 +50,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ rules: { sentenceCase: { level: 'message' } } });
+        prHygiene({ rules: { useSentenceCase: { level: 'message' } } });
 
         expect(message).toHaveBeenCalledTimes(1);
         expect(warn).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ rules: { sentenceCase: { level: 'warn' } } });
+        prHygiene({ rules: { useSentenceCase: { level: 'warn' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ rules: { sentenceCase: { level: 'fail' } } });
+        prHygiene({ rules: { useSentenceCase: { level: 'fail' } } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('prHygiene: Sentence Case', () => {
           prTitle,
         });
 
-        prHygiene({ rules: { sentenceCase: 'off' } });
+        prHygiene({ rules: { useSentenceCase: 'off' } });
 
         expect(message).not.toHaveBeenCalled();
         expect(warn).not.toHaveBeenCalled();
