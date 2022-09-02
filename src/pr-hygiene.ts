@@ -36,13 +36,12 @@ const renderViolation = ({
 }: RenderViolationParams) => {
   const [start, end] = violation.span;
 
-  const indicator =
-    '^'.repeat(end - start).padStart((prefix ? prefix.length + 2 : 0) + end) +
-    ' ' +
-    message;
+  const indicator = '^'
+    .repeat(end - start)
+    .padStart((prefix ? prefix.length + 2 : 0) + end);
 
   // Start with a leading newline to prevent the codeblock from getting indented.
-  return '\n```\n' + prTitle + '\n' + indicator + '\n```';
+  return '\n```\n' + prTitle + '\n' + indicator + '\n```' + '\n' + message;
 };
 
 const optionsOrDefaults =
