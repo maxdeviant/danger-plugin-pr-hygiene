@@ -35,7 +35,7 @@ describe('Verb Forms', () => {
       }
     );
 
-    it.each(['add', 'change', 'update', 'delete', 'remove'])(
+    it.each(['add', 'change', 'update', 'delete', 'remove', 'stringify'])(
       "'%s' is not present participle",
       word => {
         expect(isPresentParticiple(word)).toBe(false);

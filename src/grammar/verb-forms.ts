@@ -17,7 +17,7 @@ export const isThirdPersonSingular = (verb: string) =>
 
 export const isPastTense = (verb: string) => /(.+ed)$/.test(verb);
 
-export const isPresentParticiple = (verb: string) => /((\w)*(ing))/.test(verb);
+export const isPresentParticiple = (verb: string) => /((\w)*(ing))$/.test(verb);
 
 export const isBareInfinitive = (verb: string) =>
   !isThirdPersonSingular(verb) &&
