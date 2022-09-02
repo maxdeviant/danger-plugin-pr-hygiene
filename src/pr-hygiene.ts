@@ -41,7 +41,8 @@ const renderViolation = ({
     ' ' +
     message;
 
-  return '```\n' + prTitle + '\n' + indicator + '\n```';
+  // Start with a leading newline to prevent the codeblock from getting indented.
+  return '\n```\n' + prTitle + '\n' + indicator + '\n```';
 };
 
 const optionsOrDefaults =
