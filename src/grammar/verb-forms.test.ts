@@ -2,19 +2,29 @@ import { isPastTense, isPresentParticiple } from './verb-forms';
 
 describe('Verb Forms', () => {
   describe('isPastTense', () => {
-    it.each(['added', 'changed', 'updated', 'deleted', 'removed'])(
-      "'%s' is past tense",
-      word => {
-        expect(isPastTense(word)).toBe(true);
-      }
-    );
+    it.each([
+      'added',
+      'changed',
+      'edited',
+      'updated',
+      'deleted',
+      'removed',
+      'redirected',
+    ])("'%s' is past tense", word => {
+      expect(isPastTense(word)).toBe(true);
+    });
 
-    it.each(['add', 'change', 'update', 'delete', 'remove'])(
-      "'%s' is not past tense",
-      word => {
-        expect(isPastTense(word)).toBe(false);
-      }
-    );
+    it.each([
+      'add',
+      'change',
+      'edit',
+      'update',
+      'delete',
+      'remove',
+      'redirect',
+    ])("'%s' is not past tense", word => {
+      expect(isPastTense(word)).toBe(false);
+    });
   });
 
   describe('isPresentParticiple', () => {

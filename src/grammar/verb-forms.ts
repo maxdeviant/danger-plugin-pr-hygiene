@@ -15,7 +15,7 @@ const thirdPersonSingularVerbs = new Set([
 export const isThirdPersonSingular = (verb: string) =>
   thirdPersonSingularVerbs.has(verb.toLowerCase());
 
-export const isPastTense = (verb: string) => /(.+ed)/.test(verb);
+export const isPastTense = (verb: string) => /(.+ed)$/.test(verb);
 
 export const isPresentParticiple = (verb: string) => /((\w)*(ing))/.test(verb);
 
