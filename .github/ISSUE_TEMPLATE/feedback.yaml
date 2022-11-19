@@ -27,7 +27,7 @@ body:
     id: description
     attributes:
       label: What feedback do you have?
-      description:
+      description: Tell us what you'd like to see added or changed with the plugin.
       placeholder: '`useImperativeMood` detected a false positive.'
     validations:
       required: true
