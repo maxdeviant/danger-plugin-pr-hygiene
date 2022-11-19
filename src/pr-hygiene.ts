@@ -1,5 +1,6 @@
 import * as E from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
+import { tryGetPackageVersion } from './package-version';
 import { extractPrefix } from './pr-title';
 import {
   defaultNoTrailingPunctuationConfig,
@@ -184,8 +185,19 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       labels: 'feedback',
       template: 'feedback.yaml',
       title: '[Feedback]: ',
-      version: '0.3.0',
     });
+
+    pipe(
+      tryGetPackageVersion('../package.json'),
+      E.match(
+        errors => {
+          console.error(errors);
+        },
+        version => {
+          feedbackQueryParams.append('version', version);
+        }
+      )
+    );
 
     const feedbackLink = `https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?${feedbackQueryParams}`;
 
