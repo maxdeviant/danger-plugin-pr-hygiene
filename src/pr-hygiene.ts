@@ -55,6 +55,7 @@ export interface PrHygieneContext {
   message: (message: string) => void;
   warn: (message: string) => void;
   fail: (message: string) => void;
+  markdown: (message: string) => void;
   prTitle: string;
 }
 
@@ -177,5 +178,19 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
         })
       );
     }
+
+    const feedbackQueryParams = new URLSearchParams({
+      assignees: 'maxdeviant',
+      labels: 'feedback',
+      template: 'feedback.yaml',
+      title: '[Feedback]: ',
+      version: '0.3.0',
+    });
+
+    const feedbackLink = `https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?${feedbackQueryParams}`;
+
+    ctx.markdown(
+      `Have feedback on this plugin? [Let's hear it!](${feedbackLink})`
+    );
   };
 };
