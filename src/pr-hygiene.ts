@@ -190,7 +190,7 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
     const feedbackLink = `https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?${feedbackQueryParams}`;
 
     ctx.markdown(
-      `Have feedback on this plugin? [Let's hear it!](${feedbackLink})`
+      `Have feedback on this plugin? <a target="_blank" href="${feedbackLink}">Let's hear it!</a>`
     );
   };
 };
