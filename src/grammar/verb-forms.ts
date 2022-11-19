@@ -1,15 +1,27 @@
 const thirdPersonSingularVerbs = new Set([
   'adds',
   'amends',
+  'applies',
   'changes',
+  'cleans',
+  'copies',
   'deletes',
+  'duplicates',
   'fixes',
+  'formalizes',
+  'migrates',
   'modifies',
   'patches',
+  'plugs',
   'removes',
   'reverts',
+  'standardizes',
+  'stores',
+  'tries',
   'tweaks',
+  'undoes',
   'updates',
+  'writes',
 ]);
 
 export const isThirdPersonSingular = (verb: string) =>
