@@ -17,11 +17,13 @@ describe('prHygiene: All', () => {
       const message = jest.fn();
       const warn = jest.fn();
       const fail = jest.fn();
+      const markdown = jest.fn();
 
       const prHygiene = makePrHygiene({
         message,
         warn,
         fail,
+        markdown,
         prTitle,
       });
 

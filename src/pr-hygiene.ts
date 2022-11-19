@@ -55,6 +55,7 @@ export interface PrHygieneContext {
   message: (message: string) => void;
   warn: (message: string) => void;
   fail: (message: string) => void;
+  markdown: (message: string) => void;
   prTitle: string;
 }
 
