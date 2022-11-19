@@ -44,6 +44,16 @@ const renderViolation = ({
   return '\n```\n' + prTitle + '\n' + indicator + '\n```' + '\n' + message;
 };
 
+const reportViolations =
+  (emitViolation: (violation: Violation) => void) =>
+  (violations: Violation[]) => {
+    for (const violation of violations) {
+      emitViolation(violation);
+    }
+
+    return { violationCount: violations.length };
+  };
+
 const optionsOrDefaults =
   <T>(defaults: T) =>
   (options: Partial<T> | undefined) => ({
@@ -98,8 +108,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       pipe(
         requirePrefix(prefixPattern)(ctx.prTitle),
-        E.mapLeft(violations => {
-          for (const violation of violations) {
+        E.mapLeft(
+          reportViolations(violation => {
             const message = renderViolation({
               parsedPrTitle: { prefix, suffix },
               prTitle: ctx.prTitle,
@@ -108,8 +118,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
             });
 
             emitLevelToHandler[ruleOptions.level](message);
-          }
-        })
+          })
+        )
       );
     }
 
@@ -120,8 +130,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       pipe(
         useImperativeMood(suffix),
-        E.mapLeft(violations => {
-          for (const violation of violations) {
+        E.mapLeft(
+          reportViolations(violation => {
             const message = renderViolation({
               parsedPrTitle: { prefix, suffix },
               prTitle: ctx.prTitle,
@@ -130,8 +140,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
             });
 
             emitLevelToHandler[ruleOptions.level](message);
-          }
-        })
+          })
+        )
       );
     }
 
@@ -142,8 +152,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       pipe(
         useSentenceCase(suffix),
-        E.mapLeft(violations => {
-          for (const violation of violations) {
+        E.mapLeft(
+          reportViolations(violation => {
             const message = renderViolation({
               parsedPrTitle: { prefix, suffix },
               prTitle: ctx.prTitle,
@@ -152,8 +162,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
             });
 
             emitLevelToHandler[ruleOptions.level](message);
-          }
-        })
+          })
+        )
       );
     }
 
@@ -164,8 +174,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
       pipe(
         noTrailingPunctuation(suffix),
-        E.mapLeft(violations => {
-          for (const violation of violations) {
+        E.mapLeft(
+          reportViolations(violation => {
             const message = renderViolation({
               parsedPrTitle: { prefix, suffix },
               prTitle: ctx.prTitle,
@@ -174,8 +184,8 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
             });
 
             emitLevelToHandler[ruleOptions.level](message);
-          }
-        })
+          })
+        )
       );
     }
   };
