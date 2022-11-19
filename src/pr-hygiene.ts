@@ -1,6 +1,8 @@
+import * as A from 'fp-ts/Array';
 import * as E from 'fp-ts/Either';
 import { Either } from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
+import { tryGetPackageVersion } from './package-version';
 import { extractPrefix } from './pr-title';
 import {
   defaultNoTrailingPunctuationConfig,
@@ -18,6 +20,7 @@ import {
   Violation,
 } from './rules';
 import { EmitLevel } from './types';
+import * as N from 'fp-ts/number';
 
 interface RenderViolationParams {
   parsedPrTitle: {
@@ -201,8 +204,49 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
       );
     }
 
-    for (const rule of rulesToProcess) {
-      rule();
+    const totalViolations = pipe(
+      rulesToProcess,
+      A.foldMap(N.MonoidSum)(rule =>
+        pipe(
+          rule(),
+          E.match(
+            ({ violationCount }) => violationCount,
+            () => 0
+          )
+        )
+      )
+    );
+
+    const hasAnyViolations = totalViolations > 0;
+    if (hasAnyViolations) {
+      const feedbackLink = generateFeedbackLink();
+
+      ctx.markdown(
+        `Have feedback on this plugin? [Let's hear it!](${feedbackLink})`
+      );
     }
   };
+};
+
+const generateFeedbackLink = () => {
+  const feedbackQueryParams = new URLSearchParams({
+    template: 'feedback.yaml',
+    title: '[Feedback]: ',
+    labels: 'feedback',
+    assignees: 'maxdeviant',
+  });
+
+  pipe(
+    tryGetPackageVersion('../package.json'),
+    E.match(
+      errors => {
+        console.error(errors);
+      },
+      version => {
+        feedbackQueryParams.append('version', version);
+      }
+    )
+  );
+
+  return `https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?${feedbackQueryParams}`;
 };
