@@ -9,6 +9,7 @@ const thirdPersonSingularVerbs = new Set([
   'duplicates',
   'fixes',
   'formalizes',
+  'initializes',
   'migrates',
   'modifies',
   'patches',
