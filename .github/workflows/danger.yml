@@ -16,15 +16,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
+          cache: 'pnpm'
 
-      - run: yarn
-      - run: yarn build
+      - run: pnpm install
+      - run: pnpm build
 
       - name: Run Danger
-        run: yarn danger ci
+        run: pnpm danger ci
         env:
           GITHUB_TOKEN: ${{ github.token }}
