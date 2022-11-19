@@ -20,6 +20,7 @@ import {
   Violation,
 } from './rules';
 import { EmitLevel } from './types';
+import * as N from 'fp-ts/number';
 
 interface RenderViolationParams {
   parsedPrTitle: {
@@ -205,17 +206,14 @@ export const makePrHygiene = (ctx: PrHygieneContext) => {
 
     const totalViolations = pipe(
       rulesToProcess,
-      A.reduce(
-        0,
-        (acc, rule) =>
-          acc +
-          pipe(
-            rule(),
-            E.match(
-              ({ violationCount }) => violationCount,
-              () => 0
-            )
+      A.foldMap(N.MonoidSum)(rule =>
+        pipe(
+          rule(),
+          E.match(
+            ({ violationCount }) => violationCount,
+            () => 0
           )
+        )
       )
     );
 
