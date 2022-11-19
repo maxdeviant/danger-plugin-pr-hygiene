@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a feedback link to plugin output (#6)
 - `useImperativeMood`: Added detection of more third-person singular verbs
 
 ## [0.3.0] - 2022-09-01
