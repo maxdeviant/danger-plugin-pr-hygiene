@@ -1,4 +1,5 @@
 import * as E from 'fp-ts/Either';
+import { Either } from 'fp-ts/Either';
 import { flow, pipe } from 'fp-ts/function';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
@@ -12,7 +13,7 @@ const PackageJson = t.strict(
 
 export const tryGetPackageVersion = (
   packageJsonPath: string
-): E.Either<string[], string> =>
+): Either<string[], string> =>
   pipe(
     E.tryCatch(
       () => require(packageJsonPath) as unknown,
