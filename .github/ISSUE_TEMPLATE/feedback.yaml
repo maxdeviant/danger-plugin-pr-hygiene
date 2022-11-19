@@ -1,0 +1,40 @@
+name: Feedback
+description: Provide feedback on `danger-plugin-pr-hygiene`
+title: '[Feedback]: '
+labels: ['feedback']
+assignees:
+  - maxdeviant
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feedback report!
+
+        We'll use your feedback to help make `danger-plugin-pr-hygiene` better.
+  - type: dropdown
+    id: rules
+    attributes:
+      label: What rules does this feedback apply to?
+      multiple: true
+      options:
+        - requirePrefix
+        - useImperativeMood
+        - useSentenceCase
+        - noTrailingPunctuation
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What feedback do you have?
+      description:
+      placeholder: '`useImperativeMood` detected a false positive.'
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of `danger-plugin-pr-hygiene` are you running?
+    validations:
+      required: true
