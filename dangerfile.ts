@@ -1,3 +1,3 @@
-import { prHygiene } from './';
+import { prHygiene } from "./";
 
 prHygiene();

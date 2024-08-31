@@ -15,13 +15,9 @@ jobs:
 
       - uses: erlef/setup-beam@v1.18.1
         with:
-          otp-version: '26.0.2'
-          gleam-version: '1.4.1'
-          rebar3-version: '3'
-
-      - run: gleam format --check src test
-      - run: gleam deps download
-      - run: gleam test
+          otp-version: "26.0.2"
+          gleam-version: "1.4.1"
+          rebar3-version: "3"
 
       - uses: pnpm/action-setup@v4.0.0
         with:
@@ -29,9 +25,14 @@ jobs:
 
       - uses: actions/setup-node@v4.0.3
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
+
+      - run: gleam format --check src test
+      - run: pnpm format --check
+
+      - run: gleam deps download
+      - run: gleam test
 
       - run: pnpm install
-      - run: pnpm format --check
       - run: pnpm build
