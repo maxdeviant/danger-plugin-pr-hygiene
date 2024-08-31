@@ -1,6 +1,7 @@
 import danger_plugin_pr_hygiene.{
   PrHygieneContext, default_options, make_pr_hygiene,
 }
+import fake_danger
 import gleam/list
 import startest.{describe, it}
 
@@ -22,10 +23,13 @@ pub fn all_tests() {
         |> list.map(fn(pr_title) {
           describe("given \"" <> pr_title <> "\"", [
             it("does not emit anything", fn() {
-              let message = fn(_message) { Nil }
-              let warn = fn(_message) { Nil }
-              let fail = fn(_message) { Nil }
-              let markdown = fn(_message) { Nil }
+              let danger = fake_danger.new()
+
+              let message = fake_danger.make_method(danger, fake_danger.Message)
+              let warn = fake_danger.make_method(danger, fake_danger.Warn)
+              let fail = fake_danger.make_method(danger, fake_danger.Fail)
+              let markdown =
+                fake_danger.make_method(danger, fake_danger.Markdown)
 
               let pr_hygiene =
                 make_pr_hygiene(PrHygieneContext(
