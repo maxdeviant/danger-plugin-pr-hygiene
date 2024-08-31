@@ -7,6 +7,9 @@ import danger_plugin_pr_hygiene/rules/no_trailing_punctuation.{
 import danger_plugin_pr_hygiene/rules/require_prefix.{
   type RequirePrefixConfig, require_prefix,
 }
+import danger_plugin_pr_hygiene/rules/use_imperative_mood.{
+  type UseImperativeMoodConfig, use_imperative_mood,
+}
 import danger_plugin_pr_hygiene/rules/use_sentence_case.{
   type UseSentenceCaseConfig, use_sentence_case,
 }
@@ -39,6 +42,7 @@ pub type PrHygieneOptions {
 pub fn default_options() -> PrHygieneOptions {
   PrHygieneOptions(rules: PrHygieneRules(
     require_prefix: Off,
+    use_imperative_mood: Config(use_imperative_mood.default_config()),
     use_sentence_case: Config(use_sentence_case.default_config()),
     no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
   ))
@@ -47,6 +51,7 @@ pub fn default_options() -> PrHygieneOptions {
 pub type PrHygieneRules {
   PrHygieneRules(
     require_prefix: ConfigurationOrOff(RequirePrefixConfig),
+    use_imperative_mood: ConfigurationOrOff(UseImperativeMoodConfig),
     use_sentence_case: ConfigurationOrOff(UseSentenceCaseConfig),
     no_trailing_punctuation: ConfigurationOrOff(NoTrailingPunctuationConfig),
   )
@@ -75,6 +80,27 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
           Config(config) -> {
             Ok(fn() {
               require_prefix(prefix_pattern, suffix)
+              |> result.map_error(
+                report_violations(fn(violation) {
+                  let message =
+                    render_violation(RenderViolationParams(
+                      parsed_pr_title:,
+                      pr_title: ctx.pr_title,
+                      violation:,
+                      message: config.message,
+                    ))
+
+                  emit_at_level(config.level, message)
+                }),
+              )
+            })
+          }
+          Off -> Error(Nil)
+        },
+        case rules.use_imperative_mood {
+          Config(config) -> {
+            Ok(fn() {
+              use_imperative_mood(suffix)
               |> result.map_error(
                 report_violations(fn(violation) {
                   let message =
