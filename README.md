@@ -22,7 +22,7 @@ npm install -D danger-plugin-pr-hygiene
 In your `Dangerfile`:
 
 ```ts
-import { prHygiene } from 'danger-plugin-pr-hygiene';
+import { prHygiene } from "danger-plugin-pr-hygiene";
 
 prHygiene();
 ```
