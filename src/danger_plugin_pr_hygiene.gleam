@@ -13,6 +13,7 @@ import gleam/option.{None, Some}
 import gleam/regex
 import gleam/result
 import gleam/string
+import gleam/uri
 
 pub type PrHygieneContext {
   PrHygieneContext(
@@ -123,7 +124,19 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
 
     io.debug(total_violations)
 
-    Nil
+    let has_any_violations = total_violations > 0
+    case has_any_violations {
+      True -> {
+        let feedback_link = generate_feedback_link()
+
+        ctx.markdown(
+          "Have feedback on this plugin? [Let's hear it!]("
+          <> feedback_link
+          <> ")",
+        )
+      }
+      False -> Nil
+    }
   }
 }
 
@@ -173,6 +186,21 @@ fn report_violations(
 
     list.length(violations)
   }
+}
+
+fn generate_feedback_link() -> String {
+  let query_string =
+    [
+      #("template", "feedback.yaml"),
+      #("title", "[Feedback]: "),
+      #("labels", "feedback"),
+      #("asignees", "maxdeviant"),
+      #("version", "TODO"),
+    ]
+    |> uri.query_to_string
+
+  "https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?"
+  <> query_string
 }
 
 pub fn main() {

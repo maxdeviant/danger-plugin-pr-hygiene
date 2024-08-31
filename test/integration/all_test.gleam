@@ -4,6 +4,7 @@ import danger_plugin_pr_hygiene.{
 import fake_danger
 import gleam/list
 import startest.{describe, it}
+import startest/expect
 
 const passing_pr_titles = [
   "Initial commit", "Initialize package",
@@ -42,14 +43,21 @@ pub fn all_tests() {
 
               pr_hygiene(default_options())
 
-              // TODO: Add assertions.
-              Nil
+              fake_danger.calls(danger, fake_danger.Message)
+              |> expect.to_equal([])
+              fake_danger.calls(danger, fake_danger.Warn)
+              |> expect.to_equal([])
+              fake_danger.calls(danger, fake_danger.Fail)
+              |> expect.to_equal([])
             }),
             it("does not render a feedback link", fn() {
-              let message = fn(_message) { Nil }
-              let warn = fn(_message) { Nil }
-              let fail = fn(_message) { Nil }
-              let markdown = fn(_message) { Nil }
+              let danger = fake_danger.new()
+
+              let message = fake_danger.make_method(danger, fake_danger.Message)
+              let warn = fake_danger.make_method(danger, fake_danger.Warn)
+              let fail = fake_danger.make_method(danger, fake_danger.Fail)
+              let markdown =
+                fake_danger.make_method(danger, fake_danger.Markdown)
 
               let pr_hygiene =
                 make_pr_hygiene(PrHygieneContext(
@@ -62,8 +70,7 @@ pub fn all_tests() {
 
               pr_hygiene(default_options())
 
-              // TODO: Add assertions.
-              Nil
+              fake_danger.expect_no_feedback_link(danger)
             }),
           ])
         }),
@@ -71,10 +78,13 @@ pub fn all_tests() {
         |> list.map(fn(pr_title) {
           describe("given \"" <> pr_title <> "\"", [
             it("renders a feedback link", fn() {
-              let message = fn(_message) { Nil }
-              let warn = fn(_message) { Nil }
-              let fail = fn(_message) { Nil }
-              let markdown = fn(_message) { Nil }
+              let danger = fake_danger.new()
+
+              let message = fake_danger.make_method(danger, fake_danger.Message)
+              let warn = fake_danger.make_method(danger, fake_danger.Warn)
+              let fail = fake_danger.make_method(danger, fake_danger.Fail)
+              let markdown =
+                fake_danger.make_method(danger, fake_danger.Markdown)
 
               let pr_hygiene =
                 make_pr_hygiene(PrHygieneContext(
@@ -87,8 +97,7 @@ pub fn all_tests() {
 
               pr_hygiene(default_options())
 
-              // TODO: Add assertions.
-              Nil
+              fake_danger.expect_feedback_link(danger)
             }),
           ])
         }),
