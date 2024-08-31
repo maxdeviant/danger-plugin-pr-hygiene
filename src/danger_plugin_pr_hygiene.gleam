@@ -20,6 +20,8 @@ import gleam/result
 import gleam/string
 import gleam/uri
 
+const package_version = "0.5.0"
+
 pub type PrHygieneContext {
   PrHygieneContext(
     message: fn(String) -> Nil,
@@ -244,7 +246,7 @@ fn generate_feedback_link() -> String {
       #("title", "[Feedback]: "),
       #("labels", "feedback"),
       #("asignees", "maxdeviant"),
-      #("version", "TODO"),
+      #("version", package_version),
     ]
     |> uri.query_to_string
 
