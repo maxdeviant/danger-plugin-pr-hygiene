@@ -1,4 +1,5 @@
 import danger_plugin_pr_hygiene/emit_level.{type EmitLevel}
+import danger_plugin_pr_hygiene/pr_title.{type PrTitle, PrTitle}
 import danger_plugin_pr_hygiene/rule.{type Violation}
 import danger_plugin_pr_hygiene/rules/no_trailing_punctuation.{
   type NoTrailingPunctuationConfig, no_trailing_punctuation,
@@ -8,7 +9,8 @@ import danger_plugin_pr_hygiene/rules/use_sentence_case.{
 }
 import gleam/io
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{None, Some}
+import gleam/regex
 import gleam/result
 import gleam/string
 
@@ -31,6 +33,13 @@ pub type PrHygieneOptions {
   PrHygieneOptions(rules: PrHygieneRules)
 }
 
+pub fn default_options() -> PrHygieneOptions {
+  PrHygieneOptions(rules: PrHygieneRules(
+    use_sentence_case: Config(use_sentence_case.default_config()),
+    no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
+  ))
+}
+
 pub type PrHygieneRules {
   PrHygieneRules(
     use_sentence_case: ConfigurationOrOff(UseSentenceCaseConfig),
@@ -50,9 +59,10 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
   fn(options: PrHygieneOptions) {
     let rules = options.rules
 
-    // TODO: Extract PR prefix and suffix.
-    let suffix = ctx.pr_title
-    let parsed_pr_title = ParsedPrTitle(prefix: None, suffix:)
+    let assert Ok(prefix_pattern) = regex.from_string("([a-z\\d\\(\\)]+):(.*)")
+
+    let parsed_pr_title = ctx.pr_title |> pr_title.parse(prefix_pattern)
+    let PrTitle(suffix:, ..) = parsed_pr_title
 
     let rules_to_process =
       [
@@ -117,13 +127,9 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
   }
 }
 
-type ParsedPrTitle {
-  ParsedPrTitle(prefix: Option(String), suffix: String)
-}
-
 type RenderViolationParams {
   RenderViolationParams(
-    parsed_pr_title: ParsedPrTitle,
+    parsed_pr_title: PrTitle,
     pr_title: String,
     violation: Violation,
     message: String,
@@ -132,7 +138,7 @@ type RenderViolationParams {
 
 fn render_violation(params: RenderViolationParams) -> String {
   let RenderViolationParams(
-    parsed_pr_title: ParsedPrTitle(
+    parsed_pr_title: PrTitle(
       prefix:,
       ..,
     ),
