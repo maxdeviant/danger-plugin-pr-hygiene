@@ -4,10 +4,12 @@ import danger_plugin_pr_hygiene/rule.{type Violation}
 import danger_plugin_pr_hygiene/rules/no_trailing_punctuation.{
   type NoTrailingPunctuationConfig, no_trailing_punctuation,
 }
+import danger_plugin_pr_hygiene/rules/require_prefix.{
+  type RequirePrefixConfig, require_prefix,
+}
 import danger_plugin_pr_hygiene/rules/use_sentence_case.{
   type UseSentenceCaseConfig, use_sentence_case,
 }
-import gleam/io
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/regex
@@ -36,6 +38,7 @@ pub type PrHygieneOptions {
 
 pub fn default_options() -> PrHygieneOptions {
   PrHygieneOptions(rules: PrHygieneRules(
+    require_prefix: Off,
     use_sentence_case: Config(use_sentence_case.default_config()),
     no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
   ))
@@ -43,6 +46,7 @@ pub fn default_options() -> PrHygieneOptions {
 
 pub type PrHygieneRules {
   PrHygieneRules(
+    require_prefix: ConfigurationOrOff(RequirePrefixConfig),
     use_sentence_case: ConfigurationOrOff(UseSentenceCaseConfig),
     no_trailing_punctuation: ConfigurationOrOff(NoTrailingPunctuationConfig),
   )
@@ -67,6 +71,27 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
 
     let rules_to_process =
       [
+        case rules.require_prefix {
+          Config(config) -> {
+            Ok(fn() {
+              require_prefix(prefix_pattern, suffix)
+              |> result.map_error(
+                report_violations(fn(violation) {
+                  let message =
+                    render_violation(RenderViolationParams(
+                      parsed_pr_title:,
+                      pr_title: ctx.pr_title,
+                      violation:,
+                      message: config.message,
+                    ))
+
+                  emit_at_level(config.level, message)
+                }),
+              )
+            })
+          }
+          Off -> Error(Nil)
+        },
         case rules.use_sentence_case {
           Config(config) -> {
             Ok(fn() {
@@ -199,22 +224,4 @@ fn generate_feedback_link() -> String {
 
   "https://github.com/maxdeviant/danger-plugin-pr-hygiene/issues/new?"
   <> query_string
-}
-
-pub fn main() {
-  let pr_hygiene =
-    make_pr_hygiene(PrHygieneContext(
-      message: io.println,
-      warn: io.println,
-      fail: io.println,
-      markdown: io.println,
-      pr_title: "bad PR title.",
-    ))
-
-  pr_hygiene(
-    PrHygieneOptions(rules: PrHygieneRules(
-      use_sentence_case: Config(use_sentence_case.default_config()),
-      no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
-    )),
-  )
 }
