@@ -33,9 +33,9 @@ jobs:
           cache: "pnpm"
 
       - run: gleam deps download
-      - run: pnpm install
-
       - run: gleam build
+
+      - run: pnpm install
       - run: pnpm build
 
       - name: Run Danger
