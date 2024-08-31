@@ -122,8 +122,6 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
         }
       })
 
-    io.debug(total_violations)
-
     let has_any_violations = total_violations > 0
     case has_any_violations {
       True -> {

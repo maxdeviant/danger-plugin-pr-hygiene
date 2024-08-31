@@ -12,15 +12,24 @@ pub type Method {
   Markdown
 }
 
+fn method_to_string(method: Method) -> String {
+  case method {
+    Message -> "message"
+    Warn -> "warn"
+    Fail -> "fail"
+    Markdown -> "markdown"
+  }
+}
+
 @external(javascript, "./fake_danger_ffi.mjs", "new_fake_danger")
 pub fn new() -> FakeDanger
 
 pub fn make_method(danger: FakeDanger, method: Method) {
-  fn(message) { record_call(danger, method, message) }
+  fn(message) { record_call(danger, method_to_string(method), message) }
 }
 
 pub fn calls(danger: FakeDanger, method: Method) -> List(String) {
-  get_calls(danger, method)
+  get_calls(danger, method_to_string(method))
   |> array.to_list
 }
 
@@ -73,7 +82,7 @@ pub fn expect_no_feedback_link(danger: FakeDanger) {
 }
 
 @external(javascript, "./fake_danger_ffi.mjs", "calls")
-fn get_calls(danger: FakeDanger, method: Method) -> Array(String)
+fn get_calls(danger: FakeDanger, method: String) -> Array(String)
 
 @external(javascript, "./fake_danger_ffi.mjs", "record_call")
-fn record_call(danger: FakeDanger, method: Method, value: String) -> Nil
+fn record_call(danger: FakeDanger, method: String, value: String) -> Nil
