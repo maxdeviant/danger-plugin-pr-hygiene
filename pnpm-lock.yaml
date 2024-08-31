@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      tslib:
-        specifier: 2.7.0
-        version: 2.7.0
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: 11.1.6
@@ -24,6 +20,9 @@ importers:
       rollup:
         specifier: 4.21.2
         version: 4.21.2
+      tslib:
+        specifier: 2.7.0
+        version: 2.7.0
       typescript:
         specifier: 5.5.4
         version: 5.5.4
