@@ -17,9 +17,7 @@
     "build": "rollup --config"
   },
   "files": [
-    "lib/",
-    "!lib/**/__tests__/",
-    "!lib/**/*.test.{js,d.ts}"
+    "lib/"
   ],
   "dependencies": {},
   "devDependencies": {
