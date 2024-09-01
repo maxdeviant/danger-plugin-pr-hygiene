@@ -45,7 +45,10 @@ pub fn is_present_participle_tests() {
               |> expect.to_be_true
             })
           }),
-        ["add", "change", "update", "delete", "remove", "stringify", "bring"]
+        [
+          "add", "change", "update", "delete", "remove", "stringify", "bring",
+          "Bring",
+        ]
           |> list.map(fn(word) {
             it("'" <> word <> "' is not present participle", fn() {
               is_present_participle(word)

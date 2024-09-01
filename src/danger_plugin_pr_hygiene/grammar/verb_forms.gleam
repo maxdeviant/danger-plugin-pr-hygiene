@@ -35,7 +35,7 @@ pub fn is_present_participle(verb: String) -> Bool {
   let assert Ok(pattern) = regex.from_string("(\\w)*(ing)$")
 
   regex.check(pattern, verb)
-  && !set.contains(present_participle_exceptions(), verb)
+  && !set.contains(present_participle_exceptions(), string.lowercase(verb))
 }
 
 pub fn is_bare_infinitive(verb: String) -> Bool {

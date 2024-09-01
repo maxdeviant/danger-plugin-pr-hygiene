@@ -6,7 +6,10 @@ import danger_plugin_pr_hygiene/rules/use_imperative_mood.{
 }
 import test_helpers.{test_rule}
 
-const passing_pr_titles = ["Add feature X", "Remove feature X"]
+const passing_pr_titles = [
+  "Add feature X", "Remove feature X",
+  "api: Bring `target` into scope before narrowing",
+]
 
 const failing_pr_titles = [
   "Adds feature X", "Adding feature Y", "Added feature Z", "Removes feature X",
