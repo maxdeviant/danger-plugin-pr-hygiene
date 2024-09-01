@@ -26,6 +26,7 @@ pub fn no_trailing_punctuation_tests() {
       case emit_level {
         Some(emit_level) ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               no_trailing_punctuation: Config(
@@ -38,6 +39,7 @@ pub fn no_trailing_punctuation_tests() {
           )
         None ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               no_trailing_punctuation: Off,

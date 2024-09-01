@@ -24,6 +24,7 @@ pub fn use_sentence_case_tests() {
       case emit_level {
         Some(emit_level) ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               use_sentence_case: Config(
@@ -36,6 +37,7 @@ pub fn use_sentence_case_tests() {
           )
         None ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               use_sentence_case: Off,

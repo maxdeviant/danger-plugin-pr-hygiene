@@ -71,6 +71,7 @@ export function prHygiene(options: PrHygieneOptions = {}): void {
 
   prHygiene(
     new InternalPrHygieneOptions(
+      options?.prefixPattern ?? defaultOptions.prefix_pattern,
       new PrHygieneRules(
         applyConfiguration(
           options?.rules?.requirePrefix,

@@ -23,6 +23,7 @@ pub fn require_prefix_tests() {
       case emit_level {
         Some(emit_level) ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               require_prefix: Config(
@@ -35,6 +36,7 @@ pub fn require_prefix_tests() {
           )
         None ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               require_prefix: Off,

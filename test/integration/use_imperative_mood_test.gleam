@@ -21,6 +21,7 @@ pub fn use_imperative_mood_tests() {
       case emit_level {
         Some(emit_level) ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               use_imperative_mood: Config(
@@ -33,6 +34,7 @@ pub fn use_imperative_mood_tests() {
           )
         None ->
           PrHygieneOptions(
+            ..default_options(),
             rules: PrHygieneRules(
               ..default_options().rules,
               use_imperative_mood: Off,

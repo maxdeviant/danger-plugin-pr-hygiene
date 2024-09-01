@@ -15,7 +15,7 @@ import danger_plugin_pr_hygiene/rules/use_sentence_case.{
 }
 import gleam/list
 import gleam/option.{None, Some}
-import gleam/regex
+import gleam/regex.{type Regex}
 import gleam/result
 import gleam/string
 import gleam/uri
@@ -38,16 +38,21 @@ pub type ConfigurationOrOff(config) {
 }
 
 pub type PrHygieneOptions {
-  PrHygieneOptions(rules: PrHygieneRules)
+  PrHygieneOptions(prefix_pattern: Regex, rules: PrHygieneRules)
 }
 
 pub fn default_options() -> PrHygieneOptions {
-  PrHygieneOptions(rules: PrHygieneRules(
-    require_prefix: Off,
-    use_imperative_mood: Config(use_imperative_mood.default_config()),
-    use_sentence_case: Config(use_sentence_case.default_config()),
-    no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
-  ))
+  let assert Ok(prefix_pattern) = regex.from_string("([a-z\\d\\(\\)]+):(.*)")
+
+  PrHygieneOptions(
+    prefix_pattern:,
+    rules: PrHygieneRules(
+      require_prefix: Off,
+      use_imperative_mood: Config(use_imperative_mood.default_config()),
+      use_sentence_case: Config(use_sentence_case.default_config()),
+      no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
+    ),
+  )
 }
 
 pub type PrHygieneRules {
@@ -69,9 +74,7 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
   }
 
   fn(options: PrHygieneOptions) {
-    let rules = options.rules
-
-    let assert Ok(prefix_pattern) = regex.from_string("([a-z\\d\\(\\)]+):(.*)")
+    let PrHygieneOptions(prefix_pattern:, rules:) = options
 
     let parsed_pr_title = ctx.pr_title |> pr_title.parse(prefix_pattern)
     let PrTitle(suffix:, ..) = parsed_pr_title
