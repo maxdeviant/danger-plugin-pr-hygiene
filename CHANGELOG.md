@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Rewrote library in Gleam.
+  - This has not impacted the public API in any way, and should mostly be transparent.
+
 ## [0.5.0] - 2023-06-21
 
 ### Added
