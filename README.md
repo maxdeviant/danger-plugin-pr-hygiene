@@ -8,12 +8,6 @@ A [Danger](https://danger.systems/js/) plugin for enforcing good PR hygiene.
 ## Installation
 
 ```sh
-yarn add -D danger-plugin-pr-hygiene
-```
-
-#### npm
-
-```sh
 npm install -D danger-plugin-pr-hygiene
 ```
 
