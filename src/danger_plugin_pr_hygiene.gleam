@@ -84,7 +84,7 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
         case rules.require_prefix {
           Config(config) -> {
             Ok(fn() {
-              require_prefix(prefix_pattern, suffix)
+              require_prefix(prefix_pattern, ctx.pr_title)
               |> result.map_error(
                 report_violations(fn(violation) {
                   let message =

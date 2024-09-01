@@ -4,14 +4,13 @@ import danger_plugin_pr_hygiene.{
 import danger_plugin_pr_hygiene/emit_level.{type EmitLevel}
 import fake_danger
 import gleam/list
-import gleam/option.{type Option, None, Some}
 import startest.{describe, it}
 import startest/expect
 import startest/test_tree.{type TestTree}
 
 pub fn test_rule(
   name: String,
-  config make_config: fn(Option(EmitLevel)) -> PrHygieneOptions,
+  config make_config: fn(EmitLevel) -> PrHygieneOptions,
   passing passing_pr_titles: List(String),
   failing failing_pr_titles: List(String),
 ) -> TestTree {
@@ -41,7 +40,7 @@ pub fn test_rule(
                     pr_title:,
                   ))
 
-                pr_hygiene(make_config(None))
+                pr_hygiene(make_config(emit_level.Warn))
 
                 fake_danger.calls(danger, fake_danger.Message)
                 |> expect.to_equal([])
@@ -75,7 +74,7 @@ pub fn test_rule(
                       pr_title:,
                     ))
 
-                  pr_hygiene(make_config(Some(emit_level.Message)))
+                  pr_hygiene(make_config(emit_level.Message))
 
                   fake_danger.calls(danger, fake_danger.Message)
                   |> list.length
@@ -106,7 +105,7 @@ pub fn test_rule(
                       pr_title:,
                     ))
 
-                  pr_hygiene(make_config(Some(emit_level.Warn)))
+                  pr_hygiene(make_config(emit_level.Warn))
 
                   fake_danger.calls(danger, fake_danger.Message)
                   |> expect.to_equal([])
@@ -137,7 +136,7 @@ pub fn test_rule(
                       pr_title:,
                     ))
 
-                  pr_hygiene(make_config(Some(emit_level.Fail)))
+                  pr_hygiene(make_config(emit_level.Fail))
 
                   fake_danger.calls(danger, fake_danger.Message)
                   |> expect.to_equal([])
