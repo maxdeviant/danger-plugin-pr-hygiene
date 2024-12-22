@@ -20,7 +20,7 @@ import gleam/result
 import gleam/string
 import gleam/uri
 
-const package_version = "0.5.0"
+const package_version = "0.6.1"
 
 pub type PrHygieneContext {
   PrHygieneContext(
