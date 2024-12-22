@@ -8,6 +8,7 @@ const passing_pr_titles = [
   "Send an email to the customer when a product is shipped",
   "feat: Allow provided config object to extend other configs",
   "feat(lang): Add Polish language",
+  "Put `zed: open account settings action` behind a feature flag",
 ]
 
 const failing_pr_titles = [

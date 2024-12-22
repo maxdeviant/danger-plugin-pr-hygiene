@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `useImperativeMood`: Fixed a false positive for PR titles starting with "Bring".
+- `useSentenceCase`: Fixed a false positive for PR titles with an inline code block containing a `:`.
 
 ## [0.5.0] - 2023-06-21
 

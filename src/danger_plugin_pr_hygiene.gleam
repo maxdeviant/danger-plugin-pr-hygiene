@@ -42,7 +42,7 @@ pub type PrHygieneOptions {
 }
 
 pub fn default_options() -> PrHygieneOptions {
-  let assert Ok(prefix_pattern) = regex.from_string("([a-z\\d\\(\\)]+):(.*)")
+  let assert Ok(prefix_pattern) = regex.from_string("^([a-z\\d\\(\\)]+):(.*)")
 
   PrHygieneOptions(
     prefix_pattern:,
