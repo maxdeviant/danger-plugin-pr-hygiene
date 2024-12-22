@@ -17,17 +17,19 @@ pub fn default_config() -> NoTrailingPunctuationConfig {
 pub fn no_trailing_punctuation(pr_title: String) -> Result(Nil, List(Violation)) {
   let punctuation_marks = [".", "!", "?", ",", ":", ";"]
 
-  let has_trailing_punctuation =
-    punctuation_marks
-    |> list.any(fn(punctuation_mark) {
-      pr_title
-      |> string.ends_with(punctuation_mark)
-    })
+  let number_of_trailing_punctuation_marks =
+    pr_title
+    |> string.to_graphemes
+    |> list.reverse
+    |> list.take_while(list.contains(punctuation_marks, _))
+    |> list.length
+
+  let has_trailing_punctuation = number_of_trailing_punctuation_marks > 0
 
   case has_trailing_punctuation {
     True -> {
       let end = string.length(pr_title)
-      let start = end - 1
+      let start = end - number_of_trailing_punctuation_marks
 
       Error([Violation(span: #(start, end))])
     }
