@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Rewrote library in Gleam.
+  - This has not impacted the public API in any way, and should mostly be transparent.
+
+### Fixed
+
+- `useImperativeMood`: Fixed a false positive for PR titles starting with "Bring".
+- `useSentenceCase`: Fixed a false positive for PR titles with an inline code block containing a `:`.
+
+## [0.5.0] - 2023-06-21
+
+### Added
+
+- `useImperativeMood`: Added detection of more third-person singular verbs
+
+## [0.4.1] - 2022-11-21
+
+### Fixed
+
+- Fixed an issue where `io-ts` was not listed as a dependency
+
 ## [0.4.0] - 2022-11-19
 
 ### Added
@@ -46,7 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/maxdeviant/danger-plugin-pr-hygiene/compare/v0.1.0...v0.2.0
