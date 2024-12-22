@@ -1,5 +1,5 @@
 name = "danger_plugin_pr_hygiene"
-version = "0.6.0"
+version = "0.6.1"
 description = "A Danger plugin for enforcing good PR hygiene."
 licenses = ["MIT"]
 repository = { type = "github", user = "maxdeviant", repo = "danger-plugin-py-hygiene" }
