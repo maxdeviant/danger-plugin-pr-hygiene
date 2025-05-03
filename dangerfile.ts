@@ -1,3 +1,9 @@
 import { prHygiene } from "./";
 
-prHygiene();
+prHygiene({
+  rules: {
+    noConventionalCommits: {
+      level: "warn",
+    },
+  },
+});
