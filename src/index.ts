@@ -72,6 +72,7 @@ export interface PrHygieneOptions {
 }
 
 export function prHygiene(options: PrHygieneOptions = {}): void {
+  console.log({ options });
   const prHygiene = make_pr_hygiene(
     new PrHygieneContext(message, warn, fail, markdown, danger.github.pr.title),
   );
@@ -121,14 +122,20 @@ export function prHygiene(options: PrHygieneOptions = {}): void {
         applyConfiguration(
           options?.rules?.noConventionalCommits,
           defaultOptions.rules.no_conventional_commits,
-          ({ level, message, bannedTypes }, defaultConfig) =>
-            new InternalNoConventionalCommitsConfig(
+          ({ level, message, bannedTypes }, defaultConfig) => {
+            console.log("Make no_conventional_commits", {
+              level,
+              message,
+              bannedTypes,
+            });
+            return new InternalNoConventionalCommitsConfig(
               level ? toInternalEmitLevel(level) : defaultConfig.level,
               message ?? defaultConfig.message,
               bannedTypes
                 ? array_to_list(bannedTypes)
                 : defaultConfig.banned_types,
-            ),
+            );
+          },
         ),
       ),
     ),
@@ -152,10 +159,12 @@ function applyConfiguration<I, O>(
   makeConfig: (overrides: Partial<I>, defaultConfig: O) => O,
 ): InternalConfigurationOrOff<O> {
   if (!overrides || defaultConfig instanceof Off) {
+    console.log("Using default config", defaultConfig);
     return defaultConfig;
   }
 
   if (overrides === "off") {
+    console.log("Off");
     return new Off();
   }
 
