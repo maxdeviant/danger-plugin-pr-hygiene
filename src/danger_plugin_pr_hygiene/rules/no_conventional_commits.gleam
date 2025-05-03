@@ -1,8 +1,8 @@
 import danger_plugin_pr_hygiene/emit_level.{type EmitLevel}
 import danger_plugin_pr_hygiene/rule.{type Violation, Violation}
+import gleam/io
 import gleam/regex
 import gleam/string
-import gleam/io
 
 pub type NoConventionalCommitsConfig {
   NoConventionalCommitsConfig(
