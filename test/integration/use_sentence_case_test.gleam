@@ -1,5 +1,5 @@
 import danger_plugin_pr_hygiene.{
-  Config, PrHygieneOptions, PrHygieneRules, default_options,
+  Config, Off, PrHygieneOptions, PrHygieneRules, default_options,
 }
 import danger_plugin_pr_hygiene/rules/use_sentence_case.{UseSentenceCaseConfig}
 import test_helpers.{test_rule}
@@ -28,6 +28,7 @@ pub fn use_sentence_case_tests() {
           use_sentence_case: Config(
             UseSentenceCaseConfig(..use_sentence_case.default_config(), level:),
           ),
+          no_conventional_commits: Off,
         ),
       )
     },

@@ -54,7 +54,7 @@ pub fn default_options() -> PrHygieneOptions {
       use_imperative_mood: Config(use_imperative_mood.default_config()),
       use_sentence_case: Config(use_sentence_case.default_config()),
       no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
-      no_conventional_commits: Off,
+      no_conventional_commits: Config(no_conventional_commits.default_config()),
     ),
   )
 }
