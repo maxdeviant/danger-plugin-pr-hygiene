@@ -1,6 +1,9 @@
 import danger_plugin_pr_hygiene/emit_level.{type EmitLevel}
 import danger_plugin_pr_hygiene/pr_title.{type PrTitle, PrTitle}
 import danger_plugin_pr_hygiene/rule.{type Violation}
+import danger_plugin_pr_hygiene/rules/no_conventional_commits.{
+  type NoConventionalCommitsConfig, no_conventional_commits,
+}
 import danger_plugin_pr_hygiene/rules/no_trailing_punctuation.{
   type NoTrailingPunctuationConfig, no_trailing_punctuation,
 }
@@ -51,6 +54,7 @@ pub fn default_options() -> PrHygieneOptions {
       use_imperative_mood: Config(use_imperative_mood.default_config()),
       use_sentence_case: Config(use_sentence_case.default_config()),
       no_trailing_punctuation: Config(no_trailing_punctuation.default_config()),
+      no_conventional_commits: Off,
     ),
   )
 }
@@ -61,6 +65,7 @@ pub type PrHygieneRules {
     use_imperative_mood: ConfigurationOrOff(UseImperativeMoodConfig),
     use_sentence_case: ConfigurationOrOff(UseSentenceCaseConfig),
     no_trailing_punctuation: ConfigurationOrOff(NoTrailingPunctuationConfig),
+    no_conventional_commits: ConfigurationOrOff(NoConventionalCommitsConfig),
   )
 }
 
@@ -148,6 +153,27 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
           Config(config) -> {
             Ok(fn() {
               no_trailing_punctuation(suffix)
+              |> result.map_error(
+                report_violations(fn(violation) {
+                  let message =
+                    render_violation(RenderViolationParams(
+                      parsed_pr_title:,
+                      pr_title: ctx.pr_title,
+                      violation:,
+                      message: config.message,
+                    ))
+
+                  emit_at_level(config.level, message)
+                }),
+              )
+            })
+          }
+          Off -> Error(Nil)
+        },
+        case rules.no_conventional_commits {
+          Config(config) -> {
+            Ok(fn() {
+              no_conventional_commits(ctx.pr_title)
               |> result.map_error(
                 report_violations(fn(violation) {
                   let message =
