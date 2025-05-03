@@ -1,6 +1,5 @@
 import danger_plugin_pr_hygiene/emit_level.{type EmitLevel}
 import danger_plugin_pr_hygiene/rule.{type Violation, Violation}
-import gleam/io
 import gleam/regex
 import gleam/string
 
@@ -25,12 +24,11 @@ pub fn default_config() -> NoConventionalCommitsConfig {
 
 pub fn no_conventional_commits(pr_title: String) -> Result(Nil, List(Violation)) {
   let types = default_config().banned_types |> string.join("|")
-  io.debug(types)
 
   let assert Ok(pattern) =
     regex.from_string("^(" <> types <> ")(\\([a-z0-9-_]+\\))?:\\s.+")
 
-  case io.debug(regex.check(pattern, pr_title)) {
+  case regex.check(pattern, pr_title) {
     True -> {
       let colon_position = case string.split_once(pr_title, on: ":") {
         Ok(#(before, _)) -> string.length(before) + 1
