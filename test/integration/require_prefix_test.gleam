@@ -1,5 +1,5 @@
 import danger_plugin_pr_hygiene.{
-  Config, PrHygieneOptions, PrHygieneRules, default_options,
+  Config, Off, PrHygieneOptions, PrHygieneRules, default_options,
 }
 import danger_plugin_pr_hygiene/rules/require_prefix.{RequirePrefixConfig}
 import test_helpers.{test_rule}
@@ -26,6 +26,7 @@ pub fn require_prefix_tests() {
           require_prefix: Config(
             RequirePrefixConfig(..require_prefix.default_config(), level:),
           ),
+          no_conventional_commits: Off,
         ),
       )
     },

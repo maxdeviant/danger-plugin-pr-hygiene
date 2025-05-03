@@ -1,5 +1,5 @@
 import danger_plugin_pr_hygiene.{
-  Config, PrHygieneOptions, PrHygieneRules, default_options,
+  Config, Off, PrHygieneOptions, PrHygieneRules, default_options,
 }
 import danger_plugin_pr_hygiene/rules/no_trailing_punctuation.{
   NoTrailingPunctuationConfig,
@@ -32,6 +32,7 @@ pub fn no_trailing_punctuation_tests() {
               level:,
             ),
           ),
+          no_conventional_commits: Off,
         ),
       )
     },
