@@ -173,7 +173,7 @@ pub fn make_pr_hygiene(ctx: PrHygieneContext) -> fn(PrHygieneOptions) -> Nil {
         case rules.no_conventional_commits {
           Config(config) -> {
             Ok(fn() {
-              no_conventional_commits(ctx.pr_title)
+              no_conventional_commits(config.banned_types, ctx.pr_title)
               |> result.map_error(
                 report_violations(fn(violation) {
                   let message =

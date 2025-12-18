@@ -22,8 +22,11 @@ pub fn default_config() -> NoConventionalCommitsConfig {
   )
 }
 
-pub fn no_conventional_commits(pr_title: String) -> Result(Nil, List(Violation)) {
-  let types = default_config().banned_types |> string.join("|")
+pub fn no_conventional_commits(
+  banned_types: List(String),
+  pr_title: String,
+) -> Result(Nil, List(Violation)) {
+  let types = banned_types |> string.join("|")
 
   let assert Ok(pattern) =
     regex.from_string("^(" <> types <> ")(\\([a-z0-9-_]+\\))?:\\s.+")

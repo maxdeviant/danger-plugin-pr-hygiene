@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- `noConventionalCommits`: Fixed an issue where customized `bannedTypes` were not being respected.
+
 ## [0.7.0] - 2025-12-18
 
 ### Added
