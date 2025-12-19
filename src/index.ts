@@ -15,10 +15,12 @@ import {
   Message,
   Warn,
 } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/emit_level.mjs";
+import { NoConventionalCommitsConfig as InternalNoConventionalCommitsConfig } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/rules/no_conventional_commits.mjs";
 import { NoTrailingPunctuationConfig as InternalNoTrainingPunctuationConfig } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/rules/no_trailing_punctuation.mjs";
 import { RequirePrefixConfig as InternalRequirePrefixConfig } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/rules/require_prefix.mjs";
 import { UseImperativeMoodConfig as InternalUseImperativeMoodConfig } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/rules/use_imperative_mood.mjs";
 import { UseSentenceCaseConfig as InternalUseSentenceCaseConfig } from "../build/dev/javascript/danger_plugin_pr_hygiene/danger_plugin_pr_hygiene/rules/use_sentence_case.mjs";
+import { to_list as array_to_list } from "../build/dev/javascript/gleam_javascript/gleam/javascript/array.mjs";
 
 declare var danger: DangerDSLType;
 declare function message(message: string): undefined;
@@ -48,6 +50,12 @@ export interface NoTrailingPunctuationConfig {
   message: string;
 }
 
+export interface NoConventionalCommitsConfig {
+  level: EmitLevel;
+  message: string;
+  bannedTypes: string[];
+}
+
 export type ConfigurationOrOff<T> = T | "off";
 
 export type PartialConfigurationOrOff<T> = ConfigurationOrOff<Partial<T>>;
@@ -59,6 +67,7 @@ export interface PrHygieneOptions {
     useImperativeMood?: PartialConfigurationOrOff<UseImperativeMoodConfig>;
     useSentenceCase?: PartialConfigurationOrOff<UseSentenceCaseConfig>;
     noTrailingPunctuation?: PartialConfigurationOrOff<NoTrailingPunctuationConfig>;
+    noConventionalCommits?: PartialConfigurationOrOff<NoConventionalCommitsConfig>;
   };
 }
 
@@ -107,6 +116,18 @@ export function prHygiene(options: PrHygieneOptions = {}): void {
             new InternalNoTrainingPunctuationConfig(
               level ? toInternalEmitLevel(level) : defaultConfig.level,
               message ?? defaultConfig.message,
+            ),
+        ),
+        applyConfiguration(
+          options?.rules?.noConventionalCommits,
+          defaultOptions.rules.no_conventional_commits,
+          ({ level, message, bannedTypes }, defaultConfig) =>
+            new InternalNoConventionalCommitsConfig(
+              level ? toInternalEmitLevel(level) : defaultConfig.level,
+              message ?? defaultConfig.message,
+              bannedTypes
+                ? array_to_list(bannedTypes)
+                : defaultConfig.banned_types,
             ),
         ),
       ),
